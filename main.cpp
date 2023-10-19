@@ -1,7 +1,7 @@
-#include <iostream>
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
 #include "Segment.hpp"
+#include "ParentSegment.hpp"
 
 using namespace threepp;
 
@@ -12,10 +12,10 @@ int main () {
 
     auto scene = Scene::create();
 
-    Segment segment1({0, 0, 0}, 10, 10, Color::blue);
-    Segment segment2({0, 0, 0}, 5, 0, Color::red);
+    Segment segment1({0, 0, 0}, 10, 45, Color::blue);
+    ParentSegment segment2(segment1, 10, -45, Color::red);
     scene->add(segment1.getline());
-    scene->add(segment2.getline());
+    scene->add(segment2.getLine());
 
     auto camera = PerspectiveCamera::create();
     camera->position.z = 5;
@@ -24,7 +24,14 @@ int main () {
     controls.enableRotate = false;
     controls.enableZoom = true;
 
+
+    Clock clock;
+    float rotationSpeed = 1;
     canvas.animate([&] {
+        auto dt = clock.getDelta();
+
+        segment1.getline()->rotation.z += rotationSpeed * dt;
+
         renderer.render(*scene, *camera);
     });
 }

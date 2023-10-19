@@ -9,19 +9,23 @@ using namespace threepp;
 class Segment {
 public:
 
-    Segment(const Vector3 &startPoint, float len, double angle, const Color& color);
+    Segment(const Vector3 &startPoint_, float len_, float angle_, const Color& color_);
 
     void createSegment();
+
+    float degreesToRadians(float angle_);
 
     std::shared_ptr<Line> getline() const {
         return line;
     }
 
+    Vector3 getEndpoint() const;
 private:
     Vector3 startPoint;
-    float len;
-    double angle;
+    Vector3 endPoint;
     Color segmentColor;
     std::shared_ptr<Line> line;
+    float len;
+    float angle;
 };
 #endif //MAPPEEKSAMEN_SEGMENT_HPP

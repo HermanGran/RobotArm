@@ -5,11 +5,11 @@
 
  using namespace threepp;
 
- Segment::Segment(const Vector3 &startPoint_, float len_, double angle_, const Color &color_) {
+ Segment::Segment(const Vector3 &startPoint_, float len_, float angle_, const Color &color_) {
     startPoint = startPoint_;
 
     len = len_;
-    angle = (angle_ * (M_PI / 180));
+    angle = degreesToRadians(angle_);
 
     segmentColor = color_;
 
@@ -23,10 +23,18 @@
     float dx = len * cos(angle);
     float dy = len * sin(angle);
 
-    Vector3 endPoint(startPoint.x + dx, startPoint.y + dy, startPoint.z);
+    endPoint = Vector3(startPoint.x + dx, startPoint.y + dy, startPoint.z);
 
     auto geometry = BufferGeometry::create();
     geometry->setFromPoints({startPoint, endPoint});
 
     line = Line::create(geometry, material);
 }
+
+Vector3 Segment::getEndpoint() const {
+     return endPoint;
+ }
+
+ float Segment::degreesToRadians(float angle_) {
+     return angle_ * (M_PI / 180);
+ }
