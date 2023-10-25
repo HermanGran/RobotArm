@@ -1,6 +1,6 @@
 add_library(
-        Robot Segment.cpp
-        ParentSegment.cpp
+        Robot
+        Segment.cpp
 )
 
 target_link_libraries(Robot PUBLIC threepp::threepp imgui::imgui)
