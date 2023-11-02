@@ -24,7 +24,9 @@ public:
 
     //Points the segment at the mouse
     void pointAt(Vector3 target);
+    void updateGeometry();
 
+    void follow(float targetx, float targety);
     //Calculates endpoint given startPoint, angle and length
     Vector3 getEndpoint();
 

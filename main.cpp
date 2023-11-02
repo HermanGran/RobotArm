@@ -3,6 +3,7 @@
 #include "Segment.hpp"
 #include <iostream>
 
+
 using namespace threepp;
 
 int main () {
@@ -45,11 +46,9 @@ int main () {
 
     //If else statement to update the position of the lines using rotation
 
-
-
     canvas.animate([&] {
-
         mousePos.set(mouse.x, mouse.y, 0);
+        std::cout << "mouse x: " << mouse.x << ". mouse y: " << mouse.y << std::endl;
         segment1.pointAt(mousePos);
 
         renderer.render(*scene, *camera);

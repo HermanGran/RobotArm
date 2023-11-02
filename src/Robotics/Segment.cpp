@@ -46,18 +46,27 @@ void Segment::pointAt(Vector3 target) {
      float targetAngle = atan2(dir.y, dir.x);
 
      //LERP calculations. For smoothing the movement of the lines.
-     this->angle = this->angle + (targetAngle - this->angle) * 0.01;
-     float dx = len * cos(this->angle);
-     float dy = len * sin(this->angle);
-     endPoint.set(startPoint.x + dx, startPoint.y + dy, startPoint.z);
+     float newAngle = this->angle + (targetAngle - this->angle) * 0.1;
 
-     geometry->setFromPoints({startPoint, endPoint});
+
+     if (std::abs(newAngle - this->angle) > 0) {
+         this->angle = newAngle;
+         updateGeometry();
+     }
+
 
      if (childSegment) {
          childSegment->setStartPoint(this->getEndpoint());
          childSegment->pointAt(target);
      }
 }
+
+void Segment::updateGeometry() {
+    float dx = len * cos(this->angle);
+    float dy = len * sin(this->angle);
+    endPoint.set(startPoint.x + dx, startPoint.y + dy, startPoint.z);
+    geometry->setFromPoints({startPoint, endPoint});
+ }
 
 float Segment::getAngle() {
      return angle;
@@ -77,4 +86,8 @@ Vector3 Segment::getEndpoint()  {
 
 void Segment::setChild(Segment *child) {
      this->childSegment = child;
+ }
+
+ void Segment::follow(float targetx, float targety) {
+
  }
