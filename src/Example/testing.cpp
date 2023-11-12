@@ -4,13 +4,8 @@
 #include <vector>
 #include <iostream>
 
-std::vector<float> getAngles (std::vector<Segment2D>& segments);
-std::vector<float> getLengths (std::vector<Segment2D>& segments);
-
 void CCDSolver2(std::vector<Segment2D>& segments, Vector2& target);
-void setEndPos(Segment2D& segment, Vector2& target);
-void setAngles(std::vector<Segment2D>& segments, float angle);
-void CCDSolver(std::vector<Segment2D>& segments, Vector2 target, float threshold, int maxIterations);
+
 int main () {
 
     Canvas canvas("Kinematics", {{"aa", 4}});
@@ -59,8 +54,9 @@ int main () {
         //    segment.updateGeometry();
         //}
 
+        segment1.setEndPos(target);
+        segment1.updateGeometry();
 
-        setEndPos(segment2, target);
         std::cout << target << "endPos: " << segment2.getEndPos() <<std::endl;
 
         renderer.render(*scene, *camera);
@@ -110,57 +106,4 @@ void CCDSolver2(std::vector<Segment2D>& segments, Vector2& target) {
             }
         }
     }
-}
-
-std::vector<float> getAngles(std::vector<Segment2D>& segments) {
-    std::vector<float> angles;
-    for (const auto & segment : segments) {
-        angles.push_back(segment.getAngle());
-    }
-    return angles;
-}
-
-std::vector<float> getLengths(std::vector<Segment2D>& segments) {
-    std::vector<float> lengths;
-    for (const auto & segment : segments) {
-        lengths.push_back(segment.getLen());
-    }
-    return lengths;
-}
-
-void setAngles(std::vector<Segment2D>& segments ,float angle) {
-    for (int i = 0; i < segments.size(); i++) {
-        segments[i].setAngle(angle);
-    }
-}
-
-void CCDSolver(std::vector<Segment2D>& segments, Vector2 target, float threshold = 1e-2f, int maxIterations = 10) {
-    bool endEffectorCloseEnough = false;
-
-    for (int iter = 0; iter < maxIterations && !endEffectorCloseEnough; ++iter) {
-        for (int i = static_cast<int>(segments.size()) - 1; i >= 0; --i) {
-            // Calculate vector from the current joint to the end effector
-            Vector2 currentJointToEndEffector = segments.back().getEndPos() - segments[i].getEndPos();
-            // Calculate vector from the current joint to the target
-            Vector2 currentJointToTarget = target - segments[i].getEndPos();
-
-            // Calculate the required rotation angle to align the end effector with the target
-            float angle = std::atan2(currentJointToTarget.y, currentJointToTarget.x) - std::atan2(currentJointToEndEffector.y, currentJointToEndEffector.x);
-
-            // Update the segment's angle and apply the rotation
-            segments[i].setAngle(segments[i].getAngle() + angle);
-
-            // Check if end effector is close enough to the target
-            Vector2 endEffectorPos = segments.back().getEndPos();
-            if ((endEffectorPos - target).length() < threshold) {
-                endEffectorCloseEnough = true;
-                break;
-            }
-        }
-    }
-}
-
-void setEndPos(Segment2D& segment, Vector2& target) {
-    segment.setEndPos(target);
-    segment.updateGeometry();
 }
