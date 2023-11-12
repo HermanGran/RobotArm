@@ -1,4 +1,3 @@
-
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
 
@@ -12,7 +11,6 @@ namespace {
         material->color.copy(color);
         auto mesh = Mesh::create(geometry, material);
         mesh->position.copy(pos);
-
         return mesh;
     }
 

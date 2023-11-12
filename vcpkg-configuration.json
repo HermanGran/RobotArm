@@ -7,7 +7,7 @@
   "registries": [
     {
       "kind": "git",
-      "baseline": "9c9f5b550255d36e4e5584e0a2fb061cf7f67649",
+      "baseline": "09d033889914777c652d4e3e713949dba47ee5cc",
       "repository": "https://github.com/Ecos-platform/vcpkg-registry",
       "packages": [ "threepp" ]
     }
