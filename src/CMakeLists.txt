@@ -1,10 +1,13 @@
-add_subdirectory(Example)
-
 set(SOURCE_FILES
+
+        geometry/Ball.cpp
+
+        Math/Math.cpp
+
         Robotics/Segment2D.cpp
         Robotics/Segment3D.cpp
-        Robotics/CCDSolver.cpp
-        Math/Math.cpp
+        Robotics/Segments.cpp
+
 )
 
 add_library(Robot STATIC "${SOURCE_FILES}")

@@ -7,9 +7,10 @@ find_package(threepp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 add_subdirectory(src)
+add_subdirectory(examples)
 
-add_executable(Kinematics main.cpp)
+add_executable(mightDelete main.cpp)
 
-target_link_libraries(Kinematics PUBLIC Robot)
-target_link_libraries(Kinematics PRIVATE threepp::threepp imgui::imgui)
-target_include_directories(Kinematics PUBLIC "${CMAKE_SOURCE_DIR}/include")
+target_link_libraries(mightDelete PUBLIC Robot)
+target_link_libraries(mightDelete PRIVATE threepp::threepp imgui::imgui)
+target_include_directories(mightDelete PUBLIC "${CMAKE_SOURCE_DIR}/include")
