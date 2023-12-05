@@ -8,7 +8,7 @@ using namespace threepp;
 class Segment2D {
 public:
     Segment2D(const Vector2& startPos, float len_, const Color& color_);
-    Segment2D(Segment2D& segment, float len_, const Color& color_);
+    Segment2D(Segment2D& parent, float len_, const Color& color_);
 
     void createSegment();
     void calculateEndPos(float angle);
@@ -17,16 +17,15 @@ public:
     [[nodiscard]] float getLen() const;
     [[nodiscard]] const Vector2& getStartPos() const;
     [[nodiscard]] const Vector2& getEndPos();
-    [[nodiscard]] const Vector2& getVector() const;
 
     std::shared_ptr<Line> getLine();
 
     void setAngle(float angle);
     void setEndPos(const Vector2& target);
     void setStartPos(const Vector2& endPos);
-    void updateWithRotation(float angle);
-    void update();
-
+    void update(Segment2D &segment);
+    void rotateAroundStartPoint(float angle);
+    void setChild(std::shared_ptr<Line> child);
 
 private:
     Vector2 startPos_;
@@ -38,6 +37,9 @@ private:
     Color color_;
     std::shared_ptr<Line> line_;
     std::shared_ptr<BufferGeometry> geometry_;
+    std::shared_ptr<Line> child_;
+
+    bool hasChild_;
 };
 
 #endif //MAPPEEKSAMEN_SEGMENT2D_HPP

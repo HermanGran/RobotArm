@@ -13,20 +13,24 @@ public:
     Segments();
 
     void add(Segment2D& segment);
-    void add(Segment3D& segment);
 
-    void addToGroup();
-    void updateSegments();
-    void CCDSolver(Vector2& target);
 
-    std::vector<Segment2D> getSegments();
+    std::vector<Segment2D>& getSegments();
+
+    void addToScene();
+
+
+    void addSegment(const Vector2& startPos, float len, const Color& color);
+    void updateNumberOfSegments(int numSegments, const Vector2& startPos, float len, const Color& color);
+    void removeLastSegment();
 
 private:
     std::vector<Segment2D> segments2D_;
     std::vector<Segment3D> segments3D_;
 
-    Group group;
-
+    std::shared_ptr<CylinderGeometry> cylinderGeometry_;
+    std::shared_ptr<MeshBasicMaterial> cylinderMaterial;
+    std::vector<Mesh> cylinders_;
 };
 
 #endif //MAPPEEKSAMEN_SEGMENTS_HPP

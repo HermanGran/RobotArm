@@ -7,20 +7,39 @@ void Segments::add(Segment2D &segment) {
     segments2D_.push_back(segment);
 }
 
-void Segments::add(Segment3D &segment) {
-    segments3D_.push_back(segment);
-}
-
-std::vector<Segment2D>  Segments::getSegments() {
+std::vector<Segment2D>&  Segments::getSegments() {
     return segments2D_;
 }
 
-void Segments::updateSegments() {
-    for (auto & segment : segments2D_) {
-        segment.update();
+void Segments::addToScene() {
+    for (auto & segment : getSegments()) {
     }
 }
 
+// Method to add a new segment
+void Segments::addSegment(const Vector2& startPos, float len, const Color& color) {
+    Segment2D newSegment(startPos, len, color);
+    add(newSegment);
+}
+
+// Method to remove the last segment
+void Segments::removeLastSegment() {
+    if (!segments2D_.empty()) {
+        segments2D_.pop_back();
+    }
+}
+
+// Method to update the total number of segments
+void Segments::updateNumberOfSegments(int numSegments, const Vector2& startPos, float len, const Color& color) {
+    while (segments2D_.size() < numSegments) {
+        addSegment(startPos, len, color);
+    }
+    while (segments2D_.size() > numSegments) {
+        removeLastSegment();
+    }
+}
+
+/*
 void Segments::CCDSolver(Vector2 &target) {
     int maxIter = 10;
     float threshold = 1e-2f;
@@ -50,3 +69,4 @@ void Segments::CCDSolver(Vector2 &target) {
         }
     }
 }
+ */

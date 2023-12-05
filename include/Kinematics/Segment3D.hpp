@@ -7,8 +7,8 @@ using namespace threepp;
 
 class Segment3D {
 public:
-    Segment3D(const Vector3& startPos, float angle_, float len_, const Color& color_);
-    Segment3D(Segment3D& segment, float angle_, float len_, const Color& color_);
+    Segment3D(const Vector3& startPos, float len_, const Color& color_);
+    Segment3D(Segment3D& segment, float len_, const Color& color_);
 
     void createSegment();
 
@@ -21,7 +21,7 @@ public:
     void setAngle(float angle);
     void setEndPos(Vector3& target);
     void setStartPos(Vector3& endPos);
-    void updateGeometry();
+    void updateGeometry(float angle);
 
 private:
     Vector3 startPos_;

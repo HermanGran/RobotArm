@@ -1,14 +1,13 @@
 #include "Kinematics/Segment3D.hpp"
-#include "math/Math.hpp"
 #include <cmath>
 
-Segment3D::Segment3D(const Vector3& startPos, float angle, float len, const threepp::Color &color)
-: startPos_(startPos), angle_(Math::degToRad(angle)), len_(len), color_(color) {
+Segment3D::Segment3D(const Vector3& startPos, float len, const threepp::Color &color)
+: startPos_(startPos), angle_(math::degToRad(0)), len_(len), color_(color) {
     createSegment();
 }
 
-Segment3D::Segment3D(Segment3D &segment, float angle, float len, const threepp::Color &color)
-: startPos_(segment.getEndPos()), angle_(angle), len_(len), color_(color) {
+Segment3D::Segment3D(Segment3D &segment, float len, const threepp::Color &color)
+: startPos_(segment.getEndPos()), angle_(0), len_(len), color_(color) {
     createSegment();
 }
 
@@ -56,8 +55,23 @@ void Segment3D::setStartPos(Vector3& endPos) {
     startPos_ = endPos;
 }
 
-void Segment3D::updateGeometry() {
-    endPos_ = getEndPos();
+void Segment3D::updateGeometry(float angle) {
+    Vector3 pivotPoint = startPos_;
 
-    geometry_->setFromPoints({startPos_, endPos_});
+    Matrix4 translationMatrixToOrigin;
+    translationMatrixToOrigin.makeTranslation(-pivotPoint.x, -pivotPoint.y, -pivotPoint.z);
+
+    Matrix4 rotationMatrix;
+    rotationMatrix.makeRotationZ(angle - angle_);
+
+    angle_ = angle;
+
+    Matrix4 translationMatrixBack;
+    translationMatrixBack.makeTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
+
+    Matrix4 transformationMatrix = translationMatrixBack.multiply(rotationMatrix).multiply(translationMatrixToOrigin);
+
+    line_->applyMatrix4(transformationMatrix);
+
+
 }
