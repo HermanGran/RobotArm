@@ -34,12 +34,6 @@ int main() {
     group->add(createBox({1, 0, 0}, Color::blue));
     scene->add(group);
 
-    renderer.enableTextRendering();
-    int textYOffset = 30;
-    auto& textHandle = renderer.textHandle("Hello World");
-    textHandle.setPosition(0, canvas.size().height - textYOffset);
-    textHandle.scale = 2;
-
     std::array<float, 3> posBuf{};
     ImguiFunctionalContext ui(canvas.windowPtr(), [&] {
         ImGui::SetNextWindowPos({0, 0}, 0, {0, 0});
@@ -54,7 +48,6 @@ int main() {
         camera->aspect = size.aspect();
         camera->updateProjectionMatrix();
         renderer.setSize(size);
-        textHandle.setPosition(0, size.height - textYOffset);
     });
 
     Clock clock;

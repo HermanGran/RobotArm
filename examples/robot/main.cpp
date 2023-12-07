@@ -25,6 +25,7 @@ int main () {
         ImGui::SliderFloat("x Position", &target.x, -20, 20.f);
         ImGui::SliderFloat("y Position", &target.y, -20, 20.f);
         ImGui::Text("Segments: %d", numSegments);
+        //controls.enabled = !ImGui::IsWindowHovered();
 
         if (ImGui::Button("-") && numSegments > 1) {
             numSegments -= 1;
