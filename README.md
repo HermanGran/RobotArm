@@ -6,7 +6,7 @@ in a 3D environment. Using the `threpp` library as a dependency, this project cr
 scene where a robotic arm composed of multiple segments demonstrates inverse kinematics (IK)
 principles, allowing the arm to reach a specified target represented as a green sphere. 
 
-![](data/Dec-07-2023%2018-59-01.gif)
+![](data/RobotArmDemo.gif)
 
 ## Features
 * **3D Robotic Arm Simulation:** Simulates a robotic arm with desired number of segments
