@@ -7,14 +7,25 @@
 
 using namespace threepp;
 
+// RobotArm manages the segments of the robotic arm, including the CCDSolver
 class RobotArm: public Group {
 public:
-
+    // Constructor: Initializes the arm
     explicit RobotArm();
 
-    void updateNumSegments(int numSegments);
+    // Updates the angles of each segment
     void setAngle(int segment, float angle);
+
+    // Updates the number of segments in the RobotArm
+    void updateNumSegments(int numSegments);
+
+    // Calculates end points given the position
+    Vector3 calculateEndPoint(int segment);
+
+    // Updates the positions when iterating through in CCDSolver
     void updateSegmentPositions(int segment);
+
+    // Cyclic Coordinates Descent algorithm for moving the robotArm to a target point
     void CCDSolver(const Vector3 &target, float maxAngleChange = 0.05f);
 
 private:

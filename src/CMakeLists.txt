@@ -1,7 +1,6 @@
 set(SOURCE_FILES
         geometry/Ball.cpp
         geometry/RobotArm.cpp
-        geometry/Segment.cpp
 
         kinematics/CCDSolver.cpp
 

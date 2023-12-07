@@ -5,12 +5,18 @@
 
 using namespace threepp;
 
+// Class for creating a sphere/ball
+// In this case it is used to visually see the target point
 class Ball {
 public:
+
+    // Constructor: Initializes the ball with a color
     Ball(const Color& color);
 
-    void createSphere();
+    // For creating the ball
+    void createBall();
 
+    // Returns the Mesh
     std::shared_ptr<Mesh> getBall();
 
 private:

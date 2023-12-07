@@ -25,6 +25,7 @@ int main () {
         ImGui::SliderFloat("x Position", &target.x, -20, 20.f);
         ImGui::SliderFloat("y Position", &target.y, -20, 20.f);
         ImGui::Text("Segments: %d", numSegments);
+
         if (ImGui::Button("-") && numSegments > 1) {
             numSegments -= 1;
         }
@@ -40,6 +41,7 @@ int main () {
     Ball ball(Color::green);
     scene->add(ball.getBall());
 
+    // Creating the robot arm
     auto robotArm = std::make_shared<RobotArm>();
     scene->add(robotArm);
 
