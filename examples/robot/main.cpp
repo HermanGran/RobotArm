@@ -9,7 +9,7 @@ int main () {
 
     // Setting up Canvas
     Canvas canvas("Kinematics", {{"aa", 4}, {"vsync", true}});
-    canvas.setSize({1200, 1200});
+    canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::aliceblue);
 
@@ -18,14 +18,13 @@ int main () {
 
     // Sliders for controlling target point and number of segments
     int numSegments = 1;
-    Vector3 target{};
+    Vector3 target{0, 0, 0};
     ImguiFunctionalContext ui(canvas.windowPtr(), [&] {
         ImGui::SetNextWindowPos({0, 0}, 0, {0, 0});
         ImGui::SetNextWindowSize({230, 0}, 0);
         ImGui::Begin("Robot Arm");
         ImGui::SliderFloat("x Position", &target.x, -20, 20.f);
         ImGui::SliderFloat("y Position", &target.y, -20, 20.f);
-        ImGui::SliderFloat("z Position", &target.z, -20, 20.f);
         ImGui::Text("Segments: %d", numSegments);
         if (ImGui::Button("-") && numSegments > 1) {
             numSegments -= 1;
@@ -51,8 +50,9 @@ int main () {
         renderer.render(*scene, scene->camera());
         ui.render();
 
-        scene->updateNumCylinders(numSegments);
+        scene->updateNumSegments(numSegments);
         scene->CCDSolver(target);
+        //scene->rotatingQ(target);
 
         group->position = target;
     });
