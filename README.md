@@ -54,3 +54,4 @@ from the [custom vcpkg registry](https://github.com/Ecos-platform/vcpkg-registry
 * The CCD Algorithm i have created only works in the 2D plane. Going forward, the plan is to improve the algorithm to work
 in three dimensions using quaternions. 
 * Implement a draggable object as the target point
+* Using boids as target objects for the robot arm, so when the arm touches the boids, they vanish

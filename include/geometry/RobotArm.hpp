@@ -21,12 +21,17 @@ public:
 
     // Calculates end points given the position
     Vector3 calculateEndPoint(int segment);
+    Vector3 calculateEndPointQ(int segment);
 
     // Updates the positions when iterating through in CCDSolver
     void updateSegmentPositions(int segment);
+    void updateWithQ(int segment);
 
     // Cyclic Coordinates Descent algorithm for moving the robotArm to a target point
     void CCDSolver(const Vector3 &target, float maxAngleChange = 0.05f);
+
+    // Cyclic Coordinates Descent algorithm with quaternions
+    void CCDSolverQ(const Vector3 &target);
 
 private:
     std::shared_ptr<BoxGeometry> segmentGeometry_;

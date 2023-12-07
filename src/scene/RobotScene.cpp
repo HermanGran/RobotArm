@@ -4,9 +4,9 @@
 RobotScene::RobotScene(int size) {
 
     // Creating a box around center
-    auto grid = GridHelper::create(size, 1, 0x444444, 0x444444);
+    auto grid = GridHelper::create(size, 6, 0x444444, 0x444444);
     grid->position.set(0, 0, 0);
-    grid->rotation.x = math::PI / 2;
+    //grid->rotation.x = math::PI / 2;
     add(grid);
 
     // Creating the camera

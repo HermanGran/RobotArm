@@ -15,8 +15,10 @@ int main () {
     // Creating scene
     auto scene = std::make_shared<RobotScene>(40);
 
+    OrbitControls controls(scene->camera(), canvas);
+
     // Sliders for controlling target point and number of segments
-    int numSegments = 1;
+    int numSegments = 4;
     Vector3 target{0, 0, 0};
     ImguiFunctionalContext ui(canvas.windowPtr(), [&] {
         ImGui::SetNextWindowPos({0, 0}, 0, {0, 0});
@@ -24,8 +26,9 @@ int main () {
         ImGui::Begin("Robot Arm");
         ImGui::SliderFloat("x Position", &target.x, -20, 20.f);
         ImGui::SliderFloat("y Position", &target.y, -20, 20.f);
+        ImGui::SliderFloat("z position", &target.z, -20, 20.f);
         ImGui::Text("Segments: %d", numSegments);
-        //controls.enabled = !ImGui::IsWindowHovered();
+        controls.enabled = !ImGui::IsWindowHovered();
 
         if (ImGui::Button("-") && numSegments > 1) {
             numSegments -= 1;
@@ -52,7 +55,7 @@ int main () {
         ui.render();
 
         robotArm->updateNumSegments(numSegments);
-        robotArm->CCDSolver(target);
+        robotArm->CCDSolverQ(target);
 
         ball.getBall()->position = target;
     });

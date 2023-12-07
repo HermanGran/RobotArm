@@ -1,12 +1,11 @@
 #include "geometry/RobotArm.hpp"
-#include <utility>
 
 // Constructor: Initializing the arm
 RobotArm::RobotArm() {
 
     // Creating geometry for each segment
-    segmentGeometry_ = BoxGeometry::create(5, 1, 1);
-    segmentGeometry_->translate(2, 0, 0);
+    segmentGeometry_ = BoxGeometry::create(1, 1, 5);
+    segmentGeometry_->translate(0, 0, 2);
 
     // Creating material for each segment
     segmentMaterial_ = MeshBasicMaterial::create();
@@ -51,6 +50,16 @@ Vector3 RobotArm::calculateEndPoint(int segment) {
     return endPoint;
 }
 
+Vector3 RobotArm::calculateEndPointQ(int segment) {
+    float length = 5;
+
+    Vector3 forward(0, 0, segment + 1);
+    Vector3 endPos;
+
+    forward.applyQuaternion(segments_[segment]->quaternion);
+    endPos = forward * length;
+    return endPos;
+}
 
 // Updates the positions for each segment when CCD iterates over
 void RobotArm::updateSegmentPositions(int segment) {
@@ -59,8 +68,14 @@ void RobotArm::updateSegmentPositions(int segment) {
     }
 }
 
+void RobotArm::updateWithQ(int segment) {
+    for (int i = segment + 1; i < segments_.size(); ++i) {
+        segments_[i]->position = calculateEndPointQ(i - 1);
+    }
+}
+
 // Cyclic Coordinates Descent for calculating desired angle to target position and iterates over each segment to update
-void RobotArm::CCDSolver(const threepp::Vector3 &target, float maxAngleChange) {
+void RobotArm::CCDSolver(const Vector3 &target, float maxAngleChange) {
 
     // CCD Algorithm: with max iterations
     for (int iter = 0; iter < 10; ++iter) {
@@ -90,5 +105,15 @@ void RobotArm::CCDSolver(const threepp::Vector3 &target, float maxAngleChange) {
         if ((endEffectorPos - target).length() < 0.1f) {
             break;
         }
+    }
+}
+
+// Suppose to be a CCD solver using quaternions, but I found this look at function in the threepp library
+// that works well for one segment at least. So i´ll try to implement that in this CCD solver
+// Still want to try it using quaternions but that will be for later.
+void RobotArm::CCDSolverQ(const Vector3 &target) {
+    for (int i = segments_.size() - 1; i >= 0; --i) {
+        segments_[i]->lookAt(target);
+        updateWithQ(i);
     }
 }
