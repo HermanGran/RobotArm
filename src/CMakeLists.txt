@@ -1,17 +1,16 @@
 set(SOURCE_FILES
-
         geometry/Ball.cpp
+        geometry/RobotArm.cpp
+        geometry/Segment.cpp
 
-        Kinematics/CCDSolver.cpp
-        Kinematics/Cylinder.cpp
-        Kinematics/Segment2D.cpp
-        Kinematics/Segment3D.cpp
-        Kinematics/Segments.cpp
+        kinematics/CCDSolver.cpp
 
-)
+        scene/RobotScene.cpp
+    )
 
 add_library(Kinematics STATIC "${SOURCE_FILES}")
 
 target_link_libraries(Kinematics PUBLIC threepp::threepp imgui::imgui)
 
 target_include_directories(Kinematics PUBLIC "${CMAKE_SOURCE_DIR}/include")
+

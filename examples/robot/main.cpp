@@ -1,7 +1,8 @@
 #include "geometry/Ball.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
-#include "RobotScene.hpp"
+#include "scene/RobotScene.hpp"
+#include "geometry/RobotArm.hpp"
 
 using namespace threepp;
 
@@ -36,24 +37,28 @@ int main () {
         }
         ImGui::End();
     });
-
-    OrbitControls controls{scene->camera(), canvas};
-
     // Creating a ball that follows the target
     Ball ball(Color::green);
     auto group = Group::create();
     group->add(ball.getBall());
     scene->add(group);
 
+    auto segmentGeometry = BoxGeometry::create(5, 1, 1);
+    segmentGeometry->translate(2, 0, 0);
+
+    // Create material for segment
+    auto segmentMaterial = MeshBasicMaterial::create();
+    segmentMaterial->color = Color::red;
+
+    auto group1 = std::make_shared<RobotArm>(segmentGeometry, segmentMaterial);
+
+    scene->add(group1);
     // Adding everything to canvas
     canvas.animate([&] {
         renderer.render(*scene, scene->camera());
         ui.render();
-
-        scene->updateNumSegments(numSegments);
-        scene->CCDSolver(target);
-        //scene->rotatingQ(target);
-
+        group1->updateNumSegments(numSegments);
+        group1->CCDSolver(target);
         group->position = target;
     });
 }
