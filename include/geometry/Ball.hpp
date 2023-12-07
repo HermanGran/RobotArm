@@ -13,12 +13,10 @@ public:
 
     std::shared_ptr<Mesh> getBall();
 
-
 private:
-    Vector3 pos_{0, 0, 0};
     Color color_;
     std::shared_ptr<Mesh> ball_;
-    std::shared_ptr<CircleGeometry> geometry_;
+    std::shared_ptr<SphereGeometry> geometry_;
     std::shared_ptr<MeshBasicMaterial> material_;
 };
 

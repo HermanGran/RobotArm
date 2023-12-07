@@ -1,8 +1,6 @@
 #include "geometry/Ball.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
-#include "threepp/threepp.hpp"
 #include "scene/RobotScene.hpp"
-#include "geometry/RobotArm.hpp"
 
 using namespace threepp;
 
@@ -14,7 +12,7 @@ int main () {
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::aliceblue);
 
-    // Creating scene and init
+    // Creating scene
     auto scene = std::make_shared<RobotScene>(40);
 
     // Sliders for controlling target point and number of segments
@@ -37,28 +35,22 @@ int main () {
         }
         ImGui::End();
     });
+
     // Creating a ball that follows the target
     Ball ball(Color::green);
-    auto group = Group::create();
-    group->add(ball.getBall());
-    scene->add(group);
+    scene->add(ball.getBall());
 
-    auto segmentGeometry = BoxGeometry::create(5, 1, 1);
-    segmentGeometry->translate(2, 0, 0);
+    auto robotArm = std::make_shared<RobotArm>();
+    scene->add(robotArm);
 
-    // Create material for segment
-    auto segmentMaterial = MeshBasicMaterial::create();
-    segmentMaterial->color = Color::red;
-
-    auto group1 = std::make_shared<RobotArm>(segmentGeometry, segmentMaterial);
-
-    scene->add(group1);
     // Adding everything to canvas
     canvas.animate([&] {
         renderer.render(*scene, scene->camera());
         ui.render();
-        group1->updateNumSegments(numSegments);
-        group1->CCDSolver(target);
-        group->position = target;
+
+        robotArm->updateNumSegments(numSegments);
+        robotArm->CCDSolver(target);
+
+        ball.getBall()->position = target;
     });
 }

@@ -6,11 +6,10 @@ Ball::Ball(const Color &color)
 }
 
 void Ball::createSphere() {
-    geometry_ = CircleGeometry::create();
+    geometry_ = SphereGeometry::create();
     material_ = MeshBasicMaterial::create();
     material_->color.copy(color_);
     ball_ = Mesh::create(geometry_, material_);
-    ball_->position.copy(pos_);
 }
 
 std::shared_ptr<Mesh> Ball::getBall() {

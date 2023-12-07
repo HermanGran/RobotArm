@@ -1,8 +1,13 @@
 #include "geometry/RobotArm.hpp"
 #include <utility>
 
-RobotArm::RobotArm(std::shared_ptr<BoxGeometry> geometry, std::shared_ptr<MeshBasicMaterial> material)
-: segmentGeometry_(std::move(geometry)), segmentMaterial_(std::move(material)) {}
+RobotArm::RobotArm() {
+    segmentGeometry_ = BoxGeometry::create(5, 1, 1);
+    segmentGeometry_->translate(2, 0, 0);
+
+    segmentMaterial_ = MeshBasicMaterial::create();
+    segmentMaterial_->color = Color::red;
+}
 
 void RobotArm::updateNumSegments(int numSegments) {
     while (numSegments > segments_.size()) {
@@ -76,12 +81,4 @@ void RobotArm::CCDSolver(const threepp::Vector3 &target, float maxAngleChange) {
             break;
         }
     }
-}
-
-std::shared_ptr<BoxGeometry>& RobotArm::getGeometry() {
-    return segmentGeometry_;
-}
-
-std::shared_ptr<MeshBasicMaterial>& RobotArm::getMaterial() {
-    return segmentMaterial_;
 }

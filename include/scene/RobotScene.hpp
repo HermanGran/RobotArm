@@ -4,6 +4,7 @@
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
 #include "geometry/RobotArm.hpp"
+#include "geometry/Ball.hpp"
 
 using namespace threepp;
 
@@ -12,7 +13,6 @@ public:
     explicit RobotScene(int size);
 
     [[nodiscard]] PerspectiveCamera& camera() const;
-
 
 private:
     std::shared_ptr<PerspectiveCamera> camera_;
