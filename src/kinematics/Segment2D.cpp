@@ -1,5 +1,6 @@
 #include "Kinematics/Segment2D.hpp"
 #include <cmath>
+#include <iostream>
 
 Segment2D::Segment2D(const Vector2& startPos, float len, const Color &color)
 : startPos_(startPos), angle_(0), len_(len), color_(color) {
@@ -71,7 +72,8 @@ void Segment2D::update(Segment2D &segment) {
     Vector3 world;
     line_->getWorldPosition(world);
     //startPos_ = {world.x, world.y};
-    //rotateAroundStartPoint(segment.getAngle() + angle_);
+    std::cout << segment.getAngle() << std::endl;
+    rotateAroundStartPoint(segment.getAngle());
 
 }
 
@@ -86,6 +88,7 @@ void Segment2D::rotateAroundStartPoint(float angle) {
     rotationMatrix.makeRotationZ(angle - angle_);
 
     angle_ = angle;
+
 
     Matrix4 translationMatrixBack;
     translationMatrixBack.makeTranslation(pivotPoint.x, pivotPoint.y, pivotPoint.z);
