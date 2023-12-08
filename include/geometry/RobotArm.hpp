@@ -24,8 +24,8 @@ public:
     Vector3 calculateEndPointQ(int segment);
 
     // Updates the positions when iterating through in CCDSolver
-    void updateSegmentPositions(int segment);
-    void updateWithQ(int segment);
+    void updateSegmentPositions(int segment);   // 2D
+    void updateWithQ(int segment);              // 3D
 
     // Cyclic Coordinates Descent algorithm for moving the robotArm to a target point
     void CCDSolver(const Vector3 &target, float maxAngleChange = 0.05f);

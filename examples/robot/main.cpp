@@ -1,6 +1,8 @@
 #include "geometry/Ball.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "scene/RobotScene.hpp"
+#include <iostream>
+#include <eigen3/Eigen/Dense>
 
 using namespace threepp;
 
@@ -18,7 +20,7 @@ int main () {
     OrbitControls controls(scene->camera(), canvas);
 
     // Sliders for controlling target point and number of segments
-    int numSegments = 4;
+    int numSegments = 3;
     Vector3 target{0, 0, 0};
     ImguiFunctionalContext ui(canvas.windowPtr(), [&] {
         ImGui::SetNextWindowPos({0, 0}, 0, {0, 0});

@@ -1,4 +1,6 @@
 #include "geometry/RobotArm.hpp"
+#include <eigen3/Eigen/Dense>
+#include <iostream>
 
 // Constructor: Initializing the arm
 RobotArm::RobotArm() {
@@ -53,18 +55,25 @@ Vector3 RobotArm::calculateEndPoint(int segment) {
 Vector3 RobotArm::calculateEndPointQ(int segment) {
     float length = 5;
 
-    Vector3 forward(0, 0, segment + 1);
+    // The direction forward: Z coordinates
+    Vector3 forward(0, 0, 1);
     Vector3 endPos;
+    Quaternion world;
 
-    forward.applyQuaternion(segments_[segment]->quaternion);
-    endPos = forward * length;
+    // Get the world position of the segment
+    segments_[segment]->getWorldQuaternion(world);
+
+    // Applies the orientation of the segment to the forward vector
+    forward.applyQuaternion(world);
+
+    endPos = (forward * length) + segments_[segment]->position;
     return endPos;
 }
 
 // Updates the positions for each segment when CCD iterates over
 void RobotArm::updateSegmentPositions(int segment) {
-    for (int i = segment + 1; i < segments_.size(); ++i) {
-        segments_[i]->position = calculateEndPoint(i - 1);
+    if (segment > 0) {
+        segments_[segment]->position = calculateEndPoint(segment - 1);
     }
 }
 
@@ -80,12 +89,13 @@ void RobotArm::CCDSolver(const Vector3 &target, float maxAngleChange) {
     // CCD Algorithm: with max iterations
     for (int iter = 0; iter < 10; ++iter) {
         for (int i = segments_.size() - 1; i >= 0; --i) {
-
-            // The position of the endpoint in the robot arm
+            // Calculate the current direction vector from the segment to the end effector
             Vector3 endEffector = calculateEndPoint(segments_.size() - 1);
 
             Vector3 currentPos = segments_[i]->position;
             Vector3 toEndEffector = endEffector - currentPos;
+
+            // Calculate the desired direction vector from the segment to the target
             Vector3 toTarget = target - currentPos;
 
             float desiredAngleDiff = atan2(toTarget.y, toTarget.x) - atan2(toEndEffector.y, toEndEffector.x);
@@ -108,12 +118,41 @@ void RobotArm::CCDSolver(const Vector3 &target, float maxAngleChange) {
     }
 }
 
-// Suppose to be a CCD solver using quaternions, but I found this look at function in the threepp library
-// that works well for one segment at least. So i´ll try to implement that in this CCD solver
-// Still want to try it using quaternions but that will be for later.
+// CCD Solver using quaternions for rotation in 3D space
+// inspiration from: https://codepen.io/zalo/pen/MLBKBv?editors=0010
+// Similar way of the 2D CCD
 void RobotArm::CCDSolverQ(const Vector3 &target) {
-    for (int i = segments_.size() - 1; i >= 0; --i) {
-        segments_[i]->lookAt(target);
-        updateWithQ(i);
+
+    // CCD Algorithm with max iterations
+    for (int iter = 0; iter < 10; ++iter) {
+        for (int i = segments_.size() - 1; i >= 0; --i) {
+            // Calculate the current direction vector from the segment to the end effector
+            Vector3 endEffector = calculateEndPointQ(segments_.size() - 1);
+
+            Vector3 currentPos = segments_[i]->position;
+            Vector3 toEndEffector = endEffector - currentPos;
+
+            // Calculate the desired direction vector from the segment to the target
+            Vector3 toTarget = target - currentPos;
+
+            // Create a quaternion representing the rotation needed to align the current direction with the desired direction
+            Quaternion rotation;
+            rotation.setFromUnitVectors(toEndEffector, toTarget);
+
+            // Apply this rotation to the segment's current orientation
+            segments_[i]->quaternion = rotation.multiply(segments_[i]->quaternion);
+            segments_[i]->quaternion.normalize();
+
+            // Update the positions of the segments
+            updateWithQ(i);
+        }
+
+        // Calculate the endEffector position again after changes
+        Vector3 endEffector = calculateEndPointQ(segments_.size() - 1);
+
+        // Checks to see if endEffector is close enough to the target point
+        if ((endEffector - target).length() < 0.1f) {
+            break;
+        }
     }
 }
