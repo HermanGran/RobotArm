@@ -3,6 +3,7 @@ set(SOURCE_FILES
         geometry/RobotArm.cpp
 
         scene/RobotScene.cpp
+        scene/Controls.cpp
     )
 
 add_library(Kinematics STATIC "${SOURCE_FILES}")

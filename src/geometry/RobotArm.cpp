@@ -120,6 +120,8 @@ void RobotArm::CCDSolver(const Vector3 &target, float maxAngleChange) {
 
 // CCD Solver using quaternions for rotation in 3D space
 // inspiration from: https://codepen.io/zalo/pen/MLBKBv?editors=0010
+// Quaternions: https://www.youtube.com/watch?v=3BR8tK-LuB0
+//              https://www.youtube.com/watch?v=-m3tRNy1dzI&t=975s
 // Similar way of the 2D CCD
 // Not optimal algorithm, will update
 void RobotArm::CCDSolverQ(const Vector3 &target) {
