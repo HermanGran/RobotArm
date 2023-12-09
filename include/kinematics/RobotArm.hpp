@@ -28,7 +28,7 @@ public:
     void updateWithQ(int segment);              // 3D
 
     // Cyclic Coordinates Descent algorithm for moving the robotArm to a target point
-    void CCDSolver(const Vector3 &target, float maxAngleChange = 0.05f);
+    void CCDSolver(const Vector3 &target);
 
     // Cyclic Coordinates Descent algorithm with quaternions
     void CCDSolverQ(const Vector3 &target);

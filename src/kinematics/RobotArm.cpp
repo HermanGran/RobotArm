@@ -1,4 +1,5 @@
 #include "kinematics/RobotArm.hpp"
+#include <iostream>
 
 // Constructor: Initializing the arm
 RobotArm::RobotArm() {
@@ -102,77 +103,86 @@ void RobotArm::updateWithQ(int segment) {
 }
 
 // Cyclic Coordinates Descent for calculating desired angle to target position and iterates over each segment to update
-void RobotArm::CCDSolver(const Vector3 &target, float maxAngleChange) {
+void RobotArm::CCDSolver(const Vector3 &target) {
+    const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
+    const float dampeningFactor = 0.12f;
+
     // CCD Algorithm: with max iterations
     for (int iter = 0; iter < 10; ++iter) {
         for (int i = segments_.size() - 1; i >= 0; --i) {
             // Calculate the current direction vector from the segment to the end effector
             Vector3 endEffector = calculateEndPoint(segments_.size() - 1);
+            Vector3 currentPosition = segments_[i]->position;
 
-            Vector3 currentPos = segments_[i]->position;
-            Vector3 toEndEffector = endEffector - currentPos;
-
-            // Calculate the desired direction vector from the segment to the target
-            Vector3 toTarget = target - currentPos;
+            // Calculate vectors from current segment to end effector and target
+            Vector3 toEndEffector = endEffector - currentPosition;
+            Vector3 toTarget = target - currentPosition;
 
             float desiredAngleDiff = atan2(toTarget.y, toTarget.x) - atan2(toEndEffector.y, toEndEffector.x);
 
-            // Dampening effect for moving smooth created with big help from chatGPT
-            float angleChange = std::clamp(desiredAngleDiff, -maxAngleChange, maxAngleChange) * 0.1;
+            // Dampening effect for moving smooth created with help from chatGPT
+            float angleChange = std::clamp(desiredAngleDiff, -maxAngleChange, maxAngleChange) * dampeningFactor;
             angles_[i] += angleChange;
 
             setAngle(i, angles_[i]);
             updateSegmentPositions(i);
         }
 
-        // Calculates the endEffector position again after the changes have been made
-        Vector3 endEffectorPos = calculateEndPoint(segments_.size() - 1);
-
-        // Checks to see if endEffector is close enough to the target point
-        if ((endEffectorPos - target).length() < 0.1f) {
+        // Checks to see if endEffector is close enough to the target
+        if ((calculateEndPoint(segments_.size() - 1) - target).length() < 0.1f) {
             break;
         }
     }
 }
 
-// CCD Solver using quaternions for rotation in 3D space
-// inspiration from: https://codepen.io/zalo/pen/MLBKBv?editors=0010
+// CCD Solver using cross product for finding the axis of rotation in 3D space.
+// And dot product for finding the angle of rotation
+// Applying rotation using quaternions
+// I tried implementing this CCD solver: https://codepen.io/zalo/pen/MLBKBv?editors=0010
+// Tried solving using only quaternions but could not wrap my head around how to do so
+// Will try getting it to work using only quaternions saving a few videos here for later
 // Quaternions: https://www.youtube.com/watch?v=3BR8tK-LuB0
 //              https://www.youtube.com/watch?v=-m3tRNy1dzI&t=975s
-// Similar way of the 2D CCD
 // Not optimal algorithm, will update
 void RobotArm::CCDSolverQ(const Vector3 &target) {
+    const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
+    const float dampeningFactor = 0.12f; // Reduce the impact of each rotation
 
-    // CCD Algorithm with max iterations
     for (int iter = 0; iter < 10; ++iter) {
         for (int i = segments_.size() - 1; i >= 0; --i) {
             // Calculate the current direction vector from the segment to the end effector
             Vector3 endEffector = calculateEndPointQ(segments_.size() - 1);
+            Vector3 currentPosition = segments_[i]->position;
 
-            Vector3 currentPos = segments_[i]->position;
-            Vector3 toEndEffector = endEffector - currentPos;
+            // Calculate vectors from current segment to end effector and target
+            Vector3 toEndEffector = endEffector - currentPosition;
+            Vector3 toTarget = target - currentPosition;
 
-            // Calculate the desired direction vector from the segment to the target
-            Vector3 toTarget = target - currentPos;
+            // Calculate the rotation axis (cross product) and angle (dot product)
+            Vector3 axisOfRotation = toEndEffector.cross(toTarget);
 
-            // Create a quaternion representing the rotation needed to align the current direction with the desired direction
+            // Help from chatGPT for a more smooth movement
+            float angle = acos(std::clamp(toEndEffector.dot(toTarget), -maxAngleChange, maxAngleChange));
+            angle = std::min(angle, maxAngleChange) * dampeningFactor;
+
+            // Create the quaternion for rotation
             Quaternion rotation;
-            rotation.setFromUnitVectors(toEndEffector, toTarget);
+            rotation.setFromAxisAngle(axisOfRotation, angle);
 
-            // Apply this rotation to the segment's current orientation
+            // Apply the rotation to the segment
             segments_[i]->quaternion = rotation.multiply(segments_[i]->quaternion);
             segments_[i]->quaternion.normalize();
 
-            // Update the positions of the segments
+            // Update positions
             updateWithQ(i);
         }
 
-        // Calculate the endEffector position again after changes
-        Vector3 endEffector = calculateEndPointQ(segments_.size() - 1);
-
-        // Checks to see if endEffector is close enough to the target point
-        if ((endEffector - target).length() < 0.1f) {
+        // Check if end effector is close enough to the target
+        if ((calculateEndPointQ(segments_.size() - 1) - target).length() < 0.1f) {
             break;
         }
     }
 }
+
+
+
