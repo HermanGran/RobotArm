@@ -1,6 +1,7 @@
 set(SOURCE_FILES
-        geometry/Ball.cpp
-        geometry/RobotArm.cpp
+        boids/Boids.cpp
+
+        kinematics/RobotArm.cpp
 
         scene/RobotScene.cpp
         scene/Controls.cpp

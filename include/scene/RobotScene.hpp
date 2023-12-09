@@ -3,8 +3,7 @@
 
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
-#include "geometry/RobotArm.hpp"
-#include "geometry/Ball.hpp"
+#include "kinematics/RobotArm.hpp"
 
 using namespace threepp;
 

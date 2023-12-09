@@ -1,6 +1,4 @@
-#include "geometry/RobotArm.hpp"
-#include <eigen3/Eigen/Dense>
-#include <iostream>
+#include "kinematics/RobotArm.hpp"
 
 // Constructor: Initializing the arm
 RobotArm::RobotArm() {
@@ -10,8 +8,14 @@ RobotArm::RobotArm() {
     segmentGeometry_->translate(0, 0, 2);
 
     // Creating material for each segment
-    segmentMaterial_ = MeshBasicMaterial::create();
+    segmentMaterial_ = MeshLambertMaterial::create();
     segmentMaterial_->color = Color::red;
+    segmentMaterial_->refractionRatio = 0.5;
+
+    // Creating spheres for joints
+    jointGeometry_ = SphereGeometry::create();
+    jointMaterial_ = MeshLambertMaterial::create();
+    jointMaterial_->color = Color::red;
 }
 
 // Updates the angles of each segment
@@ -23,18 +27,31 @@ void RobotArm::setAngle(int segment, float angle) {
 // Updates the number of segments
 void RobotArm::updateNumSegments(int numSegments) {
 
-    // Adds segments
+    // Adds segments and joints
     while (numSegments > segments_.size()) {
         auto newSegment = Mesh::create(segmentGeometry_, segmentMaterial_);
+        auto newJoint = Mesh::create(jointGeometry_, jointMaterial_);
+
+        newSegment->castShadow = true;
+        newSegment->receiveShadow = true;
+        newJoint->castShadow = true;
+        newJoint->receiveShadow = true;
+
         segments_.push_back(newSegment);
+        joints_.push_back(newJoint);
         angles_.push_back(0);
+
+        add(newJoint);
         add(newSegment);
     }
 
     // Removes segments
     while (numSegments < segments_.size()) {
         remove(*segments_.back());
+        remove(*joints_.back());
+
         segments_.pop_back();
+        joints_.pop_back();
         angles_.pop_back();
     }
 }
@@ -81,11 +98,11 @@ void RobotArm::updateWithQ(int segment) {
     for (int i = segment + 1; i < segments_.size(); ++i) {
         segments_[i]->position = calculateEndPointQ(i - 1);
     }
+    joints_[segment]->position = segments_[segment]->position;
 }
 
 // Cyclic Coordinates Descent for calculating desired angle to target position and iterates over each segment to update
 void RobotArm::CCDSolver(const Vector3 &target, float maxAngleChange) {
-
     // CCD Algorithm: with max iterations
     for (int iter = 0; iter < 10; ++iter) {
         for (int i = segments_.size() - 1; i >= 0; --i) {

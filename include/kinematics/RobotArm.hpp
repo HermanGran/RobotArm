@@ -34,11 +34,16 @@ public:
     void CCDSolverQ(const Vector3 &target);
 
 private:
+
+    std::vector<std::shared_ptr<Mesh>> segments_;
     std::shared_ptr<BoxGeometry> segmentGeometry_;
-    std::shared_ptr<MeshBasicMaterial> segmentMaterial_;
+    std::shared_ptr<MeshLambertMaterial> segmentMaterial_;
+
+    std::shared_ptr<SphereGeometry> jointGeometry_;
+    std::shared_ptr<MeshLambertMaterial> jointMaterial_;
+    std::vector<std::shared_ptr<Mesh>> joints_;
 
     std::vector<float> angles_;
-    std::vector<std::shared_ptr<Mesh>> segments_;
 };
 
 #endif //MAPPEEKSAMEN_ROBOTARM_HPP

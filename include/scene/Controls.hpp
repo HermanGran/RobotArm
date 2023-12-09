@@ -16,15 +16,19 @@ public:
     int numSegments() const;
 
     // Returns target point
-    Vector3& target();
+    std::shared_ptr<Mesh>& target();
 
     // Returns the ImGui controls for rendering
     std::shared_ptr<ImguiFunctionalContext> ui();
 
 private:
-    int numSegments_;
+    int numSegments_ = 2;
     Vector3 target_;
     std::shared_ptr<ImguiFunctionalContext> ui_;
+
+    std::shared_ptr<SphereGeometry> targetGeometry_;
+    std::shared_ptr<MeshLambertMaterial> targetMaterial_;
+    std::shared_ptr<Mesh> targetPoint_;
 };
 
 #endif //ROBOTARM_CONTROLS_HPP
