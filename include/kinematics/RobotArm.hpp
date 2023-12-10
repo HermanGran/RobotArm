@@ -11,13 +11,14 @@ using namespace threepp;
 class RobotArm: public Group {
 public:
     // Constructor: Initializes the arm
-    explicit RobotArm();
+    explicit RobotArm(float size, float len);
 
     // Updates the angles of each segment
     void setAngle(int segment, float angle);
 
     // Updates the number of segments in the RobotArm
     void updateNumSegments(int numSegments);
+    const std::vector<std::shared_ptr<Mesh>>& getSegments();
 
     // Calculates end points given the position
     Vector3 calculateEndPoint2D(int segment);
@@ -42,6 +43,7 @@ private:
     std::vector<std::shared_ptr<Mesh>> joints_;
 
     std::vector<float> angles_;
+    float len_;
 };
 
 #endif //MAPPEEKSAMEN_ROBOTARM_HPP

@@ -25,7 +25,6 @@ Controls::Controls(Canvas &canvas, OrbitControls& controls) {
         ImGui::SliderFloat("Z ", &target_.z, -20, 20.f);
         ImGui::Text("Segments: %d", numSegments_);
         controls.enabled = !ImGui::IsWindowHovered();
-
         if (ImGui::Button("-") && numSegments_ > 1) {
             numSegments_ -= 1;
         }

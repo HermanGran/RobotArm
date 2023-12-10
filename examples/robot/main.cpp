@@ -1,5 +1,6 @@
 #include "scene/RobotScene.hpp"
 #include "scene/Controls.hpp"
+#include <iostream>
 
 using namespace threepp;
 
@@ -13,7 +14,7 @@ int main () {
 
     // Creating scene
     auto scene = std::make_shared<RobotScene>(40);
-    auto robotArm = std::make_shared<RobotArm>();
+    auto robotArm = std::make_shared<RobotArm>(0.7, 3);
     scene->add(robotArm);
 
     canvas.onWindowResize([&](WindowSize size) {

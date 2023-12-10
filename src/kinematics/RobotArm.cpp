@@ -1,18 +1,19 @@
 #include "kinematics/RobotArm.hpp"
 
 // Constructor: Initializing the arm
-RobotArm::RobotArm() {
-
+RobotArm::RobotArm(float size, float len) {
     // Creating geometry for each segment
-    segmentGeometry_ = BoxGeometry::create(1, 1, 5);
-    segmentGeometry_->translate(0, 0, 2);
+    len_ = len;
+
+    segmentGeometry_ = BoxGeometry::create(size, size, len_);
+    segmentGeometry_->translate(0, 0, len_/2);
 
     // Creating material for each segment
     segmentMaterial_ = MeshLambertMaterial::create();
     segmentMaterial_->color = Color::red;
 
     // Creating spheres for joints
-    jointGeometry_ = SphereGeometry::create();
+    jointGeometry_ = SphereGeometry::create(size);
     jointMaterial_ = MeshLambertMaterial::create();
     jointMaterial_->color = Color::red;
 }
@@ -27,6 +28,11 @@ void RobotArm::setAngle(int segment, float angle) {
 void RobotArm::updateNumSegments(int numSegments) {
 
     // Adds segments and joints
+    if (numSegments < 0 ){
+        throw std::invalid_argument("Number of segments cannot be negative.");
+    }
+
+
     while (numSegments > segments_.size()) {
         auto newSegment = Mesh::create(segmentGeometry_, segmentMaterial_);
         auto newJoint = Mesh::create(jointGeometry_, jointMaterial_);
@@ -44,6 +50,7 @@ void RobotArm::updateNumSegments(int numSegments) {
         add(newSegment);
     }
 
+
     // Removes segments
     while (numSegments < segments_.size()) {
         remove(*segments_.back());
@@ -53,23 +60,25 @@ void RobotArm::updateNumSegments(int numSegments) {
         joints_.pop_back();
         angles_.pop_back();
     }
+
+}
+
+const std::vector<std::shared_ptr<Mesh>> &RobotArm::getSegments() {
+    return segments_;
 }
 
 // Calculates the endpoint for the segment given the current position and returns the position
 Vector3 RobotArm::calculateEndPoint2D(int segment) {
-    // Segment length
-    float length = 5;
 
     Vector3 endPoint = {
-            segments_[segment]->position.x + cos(angles_[segment]) * length,
-            segments_[segment]->position.y + sin(angles_[segment]) * length,
+            segments_[segment]->position.x + cos(angles_[segment]) * len_,
+            segments_[segment]->position.y + sin(angles_[segment]) * len_,
             segments_[segment]->position.z
     };
     return endPoint;
 }
 
 Vector3 RobotArm::calculateEndPoint3D(int segment) {
-    float length = 5;
 
     // The direction forward: Z coordinates
     Vector3 forward(0, 0, 1);
@@ -82,7 +91,7 @@ Vector3 RobotArm::calculateEndPoint3D(int segment) {
     // Applies the orientation of the segment to the forward vector
     forward.applyQuaternion(world);
 
-    endPos = (forward * length) + segments_[segment]->position;
+    endPos = (forward * len_) + segments_[segment]->position;
     return endPos;
 }
 

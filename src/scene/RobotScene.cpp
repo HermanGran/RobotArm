@@ -1,6 +1,8 @@
 #include "scene/RobotScene.hpp"
 #include "threepp/materials/ShaderMaterial.hpp"
 #include "threepp/objects/Sky.hpp"
+#include "threepp/lights/LightShadow.hpp"
+
 
 // Constructor
 RobotScene::RobotScene(int size) {
@@ -16,8 +18,11 @@ RobotScene::RobotScene(int size) {
     camera_->lookAt(0, 0, 0);
     add(camera_);
 
-    auto light = DirectionalLight::create(0xbbbbbb);
-    light->position.set(0, 200, 100);
+    // For shadow
+    auto light = SpotLight::create(0xbbbbbb);
+    light->position.set(0, 200/5, 100/5);
+    light->shadow->mapSize = Vector2(2048, 4096);
+    light->castShadow = true;
     add(light);
 
     // Copied from threepp/examples/lights//directional.cpp line: 16-23
@@ -28,7 +33,7 @@ RobotScene::RobotScene(int size) {
     skyUniforms->at("rayleigh").value<float>() = 1;
     skyUniforms->at("mieCoefficient").value<float>() = 0.005f;
     skyUniforms->at("mieDirectionalG").value<float>() = 0.8f;
-    skyUniforms->at("sunPosition").value<Vector3>().copy(light->position);
+    skyUniforms->at("sunPosition").value<Vector3>().set(0, 200, 100);
     add(sky);
 
     auto planeGeom = BoxGeometry::create(size, size, 1);

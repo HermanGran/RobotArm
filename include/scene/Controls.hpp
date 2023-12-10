@@ -4,6 +4,7 @@
 
 #include "threepp/threepp.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
+#include "kinematics/RobotArm.hpp"
 
 using namespace threepp;
 
