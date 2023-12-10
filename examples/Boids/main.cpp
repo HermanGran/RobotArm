@@ -3,6 +3,7 @@
 
 using namespace threepp;
 
+// Started looking a little into boids for fun
 int main() {
     // Setting up scene
     Canvas canvas("Boids", {{"aa", 4}, {"vsync", true}});

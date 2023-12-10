@@ -1,5 +1,6 @@
 #include "boids/Boids.hpp"
 
+// Will focus on test cases before continuing with boids
 Boids::Boids(int numBoids)
 : numBoids_(numBoids) {
     boidsGeometry_ = SphereGeometry::create();
@@ -17,7 +18,7 @@ Boids::Boids(int numBoids)
 }
 
 // Random numbers generator from programming with mosh
-// https://www.youtube.com/watch?v=ZzaPdXTrSb8 1:19
+// https://www.youtube.com/watch?v=ZzaPdXTrSb8 Timestamp = 1:19:10
 float Boids::random() {
     srand(time(0));
     int num = rand() % 10;

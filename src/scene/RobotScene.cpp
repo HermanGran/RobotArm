@@ -33,11 +33,12 @@ RobotScene::RobotScene(int size) {
 
     auto planeGeom = BoxGeometry::create(size, size, 1);
     auto planeMat = MeshLambertMaterial::create();
-    //planeMat->side = Side::Double;
     planeMat->color = Color::lightgreen;
     auto plane = Mesh::create(planeGeom, planeMat);
     plane->rotateX(math::degToRad(-90));
-    plane->position.y = -.55;
+    // To offset it below the grid to prevent clipping effect between the objects
+    plane->position.y = -0.55;
+    plane->receiveShadow = true;
     add(plane);
 
 }

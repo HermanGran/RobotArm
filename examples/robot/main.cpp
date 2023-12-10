@@ -9,7 +9,6 @@ int main () {
     Canvas canvas("Kinematics", {{"aa", 4}, {"vsync", true}});
     canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
-    renderer.setClearColor(Color::aliceblue);
     renderer.shadowMap().enabled = true;
 
     // Creating scene
@@ -31,7 +30,7 @@ int main () {
     // Adding everything to canvas
     canvas.animate([&] {
         robotArm->updateNumSegments(controls.numSegments());
-        robotArm->CCDSolverQ(controls.target()->position);
+        robotArm->CCDSolver3D(controls.target()->position);
 
         renderer.render(*scene, scene->camera());
         controls.ui()->render();

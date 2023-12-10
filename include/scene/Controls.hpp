@@ -1,7 +1,9 @@
 
 #ifndef ROBOTARM_CONTROLS_HPP
 #define ROBOTARM_CONTROLS_HPP
-#include "scene/RobotScene.hpp"
+
+#include "threepp/threepp.hpp"
+#include "threepp/extras/imgui/ImguiContext.hpp"
 
 using namespace threepp;
 
@@ -13,7 +15,7 @@ public:
     explicit Controls(Canvas& canvas, OrbitControls& controls);
 
     // Returns numSegments
-    int numSegments() const;
+    [[nodiscard]] int numSegments() const;
 
     // Returns target point
     std::shared_ptr<Mesh>& target();

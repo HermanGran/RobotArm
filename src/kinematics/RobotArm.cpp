@@ -1,5 +1,4 @@
 #include "kinematics/RobotArm.hpp"
-#include <iostream>
 
 // Constructor: Initializing the arm
 RobotArm::RobotArm() {
@@ -11,7 +10,6 @@ RobotArm::RobotArm() {
     // Creating material for each segment
     segmentMaterial_ = MeshLambertMaterial::create();
     segmentMaterial_->color = Color::red;
-    segmentMaterial_->refractionRatio = 0.5;
 
     // Creating spheres for joints
     jointGeometry_ = SphereGeometry::create();
@@ -58,7 +56,7 @@ void RobotArm::updateNumSegments(int numSegments) {
 }
 
 // Calculates the endpoint for the segment given the current position and returns the position
-Vector3 RobotArm::calculateEndPoint(int segment) {
+Vector3 RobotArm::calculateEndPoint2D(int segment) {
     // Segment length
     float length = 5;
 
@@ -70,7 +68,7 @@ Vector3 RobotArm::calculateEndPoint(int segment) {
     return endPoint;
 }
 
-Vector3 RobotArm::calculateEndPointQ(int segment) {
+Vector3 RobotArm::calculateEndPoint3D(int segment) {
     float length = 5;
 
     // The direction forward: Z coordinates
@@ -89,21 +87,22 @@ Vector3 RobotArm::calculateEndPointQ(int segment) {
 }
 
 // Updates the positions for each segment when CCD iterates over
-void RobotArm::updateSegmentPositions(int segment) {
-    if (segment > 0) {
-        segments_[segment]->position = calculateEndPoint(segment - 1);
+void RobotArm::updateSegmentPositions2D(int segment) {
+    for (int i = segment + 1; i < segments_.size(); ++i) {
+        segments_[i]->position = calculateEndPoint2D(segment - 1);
     }
 }
 
-void RobotArm::updateWithQ(int segment) {
+void RobotArm::updateSegmentPositions3D(int segment) {
     for (int i = segment + 1; i < segments_.size(); ++i) {
-        segments_[i]->position = calculateEndPointQ(i - 1);
+        segments_[i]->position = calculateEndPoint3D(i - 1);
     }
+    // Updates joint positions
     joints_[segment]->position = segments_[segment]->position;
 }
 
 // Cyclic Coordinates Descent for calculating desired angle to target position and iterates over each segment to update
-void RobotArm::CCDSolver(const Vector3 &target) {
+void RobotArm::CCDSolver2D(const Vector3 &target) {
     const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
     const float dampeningFactor = 0.12f;
 
@@ -111,7 +110,7 @@ void RobotArm::CCDSolver(const Vector3 &target) {
     for (int iter = 0; iter < 10; ++iter) {
         for (int i = segments_.size() - 1; i >= 0; --i) {
             // Calculate the current direction vector from the segment to the end effector
-            Vector3 endEffector = calculateEndPoint(segments_.size() - 1);
+            Vector3 endEffector = calculateEndPoint2D(segments_.size() - 1);
             Vector3 currentPosition = segments_[i]->position;
 
             // Calculate vectors from current segment to end effector and target
@@ -125,11 +124,11 @@ void RobotArm::CCDSolver(const Vector3 &target) {
             angles_[i] += angleChange;
 
             setAngle(i, angles_[i]);
-            updateSegmentPositions(i);
+            updateSegmentPositions2D(i);
         }
 
         // Checks to see if endEffector is close enough to the target
-        if ((calculateEndPoint(segments_.size() - 1) - target).length() < 0.1f) {
+        if ((calculateEndPoint2D(segments_.size() - 1) - target).length() < 0.1f) {
             break;
         }
     }
@@ -144,14 +143,14 @@ void RobotArm::CCDSolver(const Vector3 &target) {
 // Quaternions: https://www.youtube.com/watch?v=3BR8tK-LuB0
 //              https://www.youtube.com/watch?v=-m3tRNy1dzI&t=975s
 // Not optimal algorithm, will update
-void RobotArm::CCDSolverQ(const Vector3 &target) {
+void RobotArm::CCDSolver3D(const Vector3 &target) {
     const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
     const float dampeningFactor = 0.12f; // Reduce the impact of each rotation
 
     for (int iter = 0; iter < 10; ++iter) {
         for (int i = segments_.size() - 1; i >= 0; --i) {
             // Calculate the current direction vector from the segment to the end effector
-            Vector3 endEffector = calculateEndPointQ(segments_.size() - 1);
+            Vector3 endEffector = calculateEndPoint3D(segments_.size() - 1);
             Vector3 currentPosition = segments_[i]->position;
 
             // Calculate vectors from current segment to end effector and target
@@ -174,11 +173,11 @@ void RobotArm::CCDSolverQ(const Vector3 &target) {
             segments_[i]->quaternion.normalize();
 
             // Update positions
-            updateWithQ(i);
+            updateSegmentPositions3D(i);
         }
 
         // Check if end effector is close enough to the target
-        if ((calculateEndPointQ(segments_.size() - 1) - target).length() < 0.1f) {
+        if ((calculateEndPoint3D(segments_.size() - 1) - target).length() < 0.1f) {
             break;
         }
     }
