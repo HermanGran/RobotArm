@@ -7,15 +7,16 @@
 
 using namespace threepp;
 
-// Abstract class for achieving high cohesion and low coupling
+// abstract class for CCDSolver, avoiding high cohesion with RobotArm
 class IRobotArm {
 public:
     virtual ~IRobotArm() = default;
 
+    // Getter functions
     virtual const std::vector<std::shared_ptr<Mesh>>& getSegments() = 0;
     virtual const std::vector<std::shared_ptr<Mesh>>& getJoints() = 0;
     virtual const std::vector<float>& getLengths() = 0;
-    virtual const std::vector<float>& getSizes() = 0;
+
 };
 
 #endif //ROBOTARM_IROBOTARM_HPP

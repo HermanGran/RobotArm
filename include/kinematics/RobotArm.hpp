@@ -21,7 +21,6 @@ public:
     const std::vector<std::shared_ptr<Mesh>>& getSegments() override;
     const std::vector<std::shared_ptr<Mesh>>& getJoints() override;
     const std::vector<float>& getLengths() override;
-    const std::vector<float>& getSizes() override;
 
 private:
 
@@ -33,6 +32,8 @@ private:
     std::shared_ptr<SphereGeometry> jointGeometry_;
     std::shared_ptr<MeshLambertMaterial> jointMaterial_;
 
+    // Don´t need vectors for sizes at the moment, but in the future
+    // the plan is to implement individual size adjustments
     std::vector<float> lengths_;
     std::vector<float> sizes_;
 };

@@ -2,7 +2,6 @@
 #include "scene/Controls.hpp"
 #include "kinematics/RobotArm.hpp"
 #include "kinematics/CCDSolver.hpp"
-#include <iostream>
 
 using namespace threepp;
 

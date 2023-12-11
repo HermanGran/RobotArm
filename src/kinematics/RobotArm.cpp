@@ -72,7 +72,3 @@ const std::vector<std::shared_ptr<Mesh>>& RobotArm::getJoints() {
 const std::vector<float>& RobotArm::getLengths() {
     return lengths_;
 }
-
-const std::vector<float>& RobotArm::getSizes() {
-    return sizes_;
-}
