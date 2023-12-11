@@ -1,4 +1,5 @@
 set(SOURCE_FILES
+        kinematics/CCDSolver.cpp
         kinematics/RobotArm.cpp
 
         scene/RobotScene.cpp
