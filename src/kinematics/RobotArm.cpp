@@ -60,15 +60,17 @@ void RobotArm::updateNumSegments(int numSegments) {
 
 }
 
-// Getter functions
+// Gets list of segments
 const std::vector<std::shared_ptr<Mesh>> &RobotArm::getSegments() {
     return segments_;
 }
 
+// Gets list of joints
 const std::vector<std::shared_ptr<Mesh>>& RobotArm::getJoints() {
     return joints_;
 }
 
+// Gets list of segment lengths
 const std::vector<float>& RobotArm::getLengths() {
     return lengths_;
 }

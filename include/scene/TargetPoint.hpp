@@ -6,17 +6,27 @@
 
 using namespace threepp;
 
-
-// For creating a ball that will follow the targetPoint for the robotArm
+/**
+ * TargetPoint class for creating a 3D object to visibly see target point
+ */
 class TargetPoint {
 public:
-    // Constructor: Initializes and creates a sphere given a size
+    /**
+     * Constructor for TargetPoint
+     * @param size The size of target point
+     */
     TargetPoint(float size = 1);
 
-    // Updates its position given a Vector3
+    /**
+     * Updates the position of target point
+     * @param target The position wanted
+     */
     void move(Vector3& target);
 
-    // Returns the mesh
+    /**
+     * Gets the Mesh of 3D ball for rendering
+     * @return Reference pointer of type Mesh
+     */
     std::shared_ptr<Mesh>& get();
 private:
     std::shared_ptr<Mesh> targetPoint_;

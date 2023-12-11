@@ -47,7 +47,7 @@ RobotScene::RobotScene(int size) {
     add(plane);
 
 }
-// Returns a pointer to the camera
+// Returns reference to the camera
 PerspectiveCamera& RobotScene::camera() const  {
     return *camera_;
 }

@@ -6,13 +6,22 @@
 
 using namespace threepp;
 
-// RobotScene is responsible for setting up the 3D scene for the robot simulation
+/**
+ * RobotScene class responsible for setting up camera and scene for robotArm
+ */
 class RobotScene: public Scene {
 public:
-    // Constructor: Initializes the scene with a specific size
+    /**
+     * Constructor for RobotScene
+     * Initializes scene with camera, shadow rendering, lights and platform for robotArm
+     * @param size Platform size
+     */
     explicit RobotScene(int size);
 
-    // Provides access to the scenes camera
+    /**
+     * Gets PerspectiveCamera
+     * @return Const reference to PerspectiveCamera
+     */
     [[nodiscard]] PerspectiveCamera& camera() const;
 
 private:

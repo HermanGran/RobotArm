@@ -7,20 +7,36 @@
 
 using namespace threepp;
 
-// Setting up controls for the robotArm and targetPoint
+/**
+ * Controls class for handling ImGui interface for target point and number of segments
+ */
 class Controls {
 public:
 
-    // Constructor: Initializes given the canvas and OrbitControls for ImGui
+    /**
+     * Constructor for Controls
+     * Initializes ImGui interface
+     * @param canvas Reference for Canvas for adding UI
+     * @param controls Reference for OrbitControls for disabling while hovering UI interface
+     */
     explicit Controls(Canvas& canvas, OrbitControls& controls);
 
-    // Returns numSegments
+    /**
+     * Gets number of segments wanted
+     * @return Number of segments
+     */
     [[nodiscard]] int numSegments() const;
 
-    // Returns target point
+    /**
+     * Gets target point
+     * @return Reference for target point in form of Vector3
+     */
     Vector3& getTarget();
 
-    // Returns the ImGui controls for rendering
+    /**
+     * Gets pointer for UI interface
+     * @return Pointer to ImGui UI
+     */
     std::shared_ptr<ImguiFunctionalContext> ui();
 
 private:

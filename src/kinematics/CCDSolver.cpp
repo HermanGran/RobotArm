@@ -3,16 +3,7 @@
 // Constructor: initializes CCDSolver with an abstract class to make it usable for multiple classes
 CCDSolver::CCDSolver(IRobotArm& robotArm) : robotArm(robotArm) {}
 
-// Cyclic Coordinates Descent for calculating desired angle to target position and iterates over each segment to update
-// CCD Solver using cross product for finding the axis of rotation in 3D space.
-// And dot product for finding the angle of rotation
-// Applying rotation using quaternions
-// I tried implementing this CCD solver: https://codepen.io/zalo/pen/MLBKBv?editors=0010
-// Tried solving using only quaternions but could not wrap my head around how to do so
-// Will try getting it to work using only quaternions saving a few videos here for later
-// Quaternions: https://www.youtube.com/watch?v=3BR8tK-LuB0
-//              https://www.youtube.com/watch?v=-m3tRNy1dzI&t=975s
-// Not optimal algorithm, will update
+// CCDSolver
 void CCDSolver::solve(Vector3 &target) {
     const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
     const float dampeningFactor = 0.12f; // Reduce the impact of each rotation
@@ -53,7 +44,7 @@ void CCDSolver::solve(Vector3 &target) {
     }
 }
 
-// Updates positions and orientation for each segment
+// Updates the position and orientation for each segment
 void CCDSolver::updateSegments(int segment) {
     for (int i = segment + 1; i < robotArm.getSegments().size(); ++i) {
         robotArm.getSegments()[i]->position = calculateEndPos(i - 1);
@@ -62,7 +53,7 @@ void CCDSolver::updateSegments(int segment) {
     robotArm.getJoints()[segment]->position = robotArm.getSegments()[segment]->position;
 }
 
-// Calculates the endpoint for the segment given the current position and returns the position
+// Calculates endpoint for the segment
 Vector3 CCDSolver::calculateEndPos(int segment) {
 
     // The direction forward: Z coordinates
@@ -80,7 +71,7 @@ Vector3 CCDSolver::calculateEndPos(int segment) {
     return endPos;
 }
 
-// Returns endEffector
+// Gets end effector position
 Vector3 CCDSolver::getEndEffector() {
     return calculateEndPos(robotArm.getSegments().size() - 1);
 }
