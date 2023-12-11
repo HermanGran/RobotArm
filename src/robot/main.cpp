@@ -1,3 +1,4 @@
+#include "scene/TargetPoint.hpp"
 #include "scene/RobotScene.hpp"
 #include "scene/Controls.hpp"
 #include "kinematics/RobotArm.hpp"
@@ -11,9 +12,7 @@ int main () {
     Canvas canvas("Kinematics", {{"aa", 4}, {"vsync", true}});
     canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
-
-    // Does not render properly on built in screen on mac. Comment out if so
-    renderer.shadowMap().enabled = true;
+    renderer.shadowMap().enabled = true; // Does not render properly on built in screen on mac. Comment out if problems rise
 
     // Creating scene
     auto scene = std::make_shared<RobotScene>(20);
@@ -29,14 +28,15 @@ int main () {
     OrbitControls orbitControls(scene->camera(), canvas);
     Controls controls(canvas, orbitControls);
     CCDSolver ccdSolver(*robotArm);
+    TargetPoint targetPoint(1);
 
-    scene->add(controls.target());
     scene->add(robotArm);
-
+    scene->add(targetPoint.get());
     // Adding everything to canvas
     canvas.animate([&] {
+        targetPoint.move(controls.getTarget());
         robotArm->updateNumSegments(controls.numSegments());
-        ccdSolver.solve(controls.target()->position);
+        ccdSolver.solve(controls.getTarget());
 
         renderer.render(*scene, scene->camera());
         controls.ui()->render();

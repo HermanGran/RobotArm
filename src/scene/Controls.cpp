@@ -3,14 +3,7 @@
 // Constructor
 Controls::Controls(Canvas &canvas, OrbitControls& controls) {
 
-    // Creates target
-    targetGeometry_ = SphereGeometry::create();
-    targetMaterial_ = MeshLambertMaterial::create();
-    targetMaterial_->color = Color::green;
-    targetPoint_ = Mesh::create(targetGeometry_, targetMaterial_);
-    targetPoint_->castShadow = true;
-    targetPoint_->receiveShadow = true;
-    target_.set(10, 10, 0);
+    target_.set(10, 10, 10);
 
     // Help from chatGPT for initializing ui_ : std::make_shared
     ui_ = std::make_shared<ImguiFunctionalContext>(canvas.windowPtr(), [&] {
@@ -43,9 +36,8 @@ int Controls::numSegments() const {
 }
 
 // Returns target point
-std::shared_ptr<Mesh>& Controls::target() {
-    targetPoint_->position = target_;
-    return targetPoint_;
+Vector3& Controls::getTarget() {
+    return target_;
 }
 
 // Returns ImGui controls

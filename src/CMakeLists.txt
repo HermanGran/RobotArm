@@ -4,6 +4,7 @@ set(SOURCE_FILES
 
         scene/RobotScene.cpp
         scene/Controls.cpp
+        scene/TargetPoint.cpp
     )
 
 add_library(Kinematics STATIC "${SOURCE_FILES}")
