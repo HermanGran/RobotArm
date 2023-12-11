@@ -1,12 +1,26 @@
 # Kinematics
 
+![](data/c++-object-oriented-programming.svg)
+
+# Table of contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation and Setup](#installation-and-setup)
+  - [1. Clone the repository](#1-clone-the-repository)
+  - [2. Install Threepp](#2-install-threepp)
+- [Usage](#usage)
+- [Further improvement](#further-improvement)
+
 ## Overview
 This is an object-oriented programming project that showcases the 3D movement of an robotic arm
 in a 3D environment. Using the `threpp` library as a dependency, this project creates a 
 scene where a robotic arm composed of multiple segments demonstrates inverse kinematics (IK)
 principles, allowing the arm to reach a specified target represented as a green sphere. 
 
-![](data/RobotArmDemo.gif)
+<p align="center">
+  <img src="data/RobotArmDem3D.gif" />
+</p>
 
 ## Features
 * **3D Robotic Arm Simulation:** Simulates a robotic arm with desired number of segments
@@ -45,11 +59,17 @@ from the [custom vcpkg registry](https://github.com/Ecos-platform/vcpkg-registry
 ## Usage
 * **Launching the Robot Arm:** Run the Robot executable
 * **Controlling the Arm:** Top left corner has the control for the target point and number of segments in the arm
+* **Changing size:** You can change the size and length of each segment adjusting these values as shown under, and max number of segments found in src/robot/main.cpp
+``` 
+auto robotArm = std::make_shared<RobotArm>(size, length); 
+Controls controls(canvas, orbitControls, maxNumSegments);
+```
 
 <p align="center">
-  <img src="data/RobotArmControls.gif" />
+  <img src="data/RobotArmControlsNew.gif" />
 </p>
 
 ## Further improvement
 * Implement a draggable object as the target point
-* Using boids as target objects for the robot arm, so when the arm touches the boids, they vanish
+* Adjustable sizes and lengths of segments 
+* Adjustable color for segments

@@ -12,10 +12,10 @@ int main () {
     Canvas canvas("Kinematics", {{"aa", 4}, {"vsync", true}});
     canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
-    renderer.shadowMap().enabled = true; // Does not render properly on built in screen on mac. Comment out if problems rise
+    renderer.shadowMap().enabled = true; // Does not render properly on built in screen on mac. Comment out if problems arise
 
     // Creating scene
-    auto scene = std::make_shared<RobotScene>(20);
+    auto scene = std::make_shared<RobotScene>(40);
     auto robotArm = std::make_shared<RobotArm>(0.5, 4);
 
     canvas.onWindowResize([&](WindowSize size) {
@@ -26,7 +26,7 @@ int main () {
 
     // Controls
     OrbitControls orbitControls(scene->camera(), canvas);
-    Controls controls(canvas, orbitControls);
+    Controls controls(canvas, orbitControls, 10);
     CCDSolver ccdSolver(*robotArm);
     TargetPoint targetPoint(1);
 

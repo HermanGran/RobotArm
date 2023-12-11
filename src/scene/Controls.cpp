@@ -1,7 +1,8 @@
 #include "scene/Controls.hpp"
 
 // Constructor
-Controls::Controls(Canvas &canvas, OrbitControls& controls) {
+Controls::Controls(Canvas &canvas, OrbitControls& controls, int maxNumSegments)
+: maxNumSegments_(maxNumSegments) {
 
     target_.set(10, 10, 10);
 
@@ -24,7 +25,7 @@ Controls::Controls(Canvas &canvas, OrbitControls& controls) {
         }
 
         ImGui::SameLine();
-        if (ImGui::Button("+") && numSegments_ < 6){
+        if (ImGui::Button("+") && numSegments_ < maxNumSegments_){
             numSegments_ += 1;
         }
         ImGui::End();

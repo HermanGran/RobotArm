@@ -18,8 +18,9 @@ public:
      * Initializes ImGui interface
      * @param canvas Reference for Canvas for adding UI
      * @param controls Reference for OrbitControls for disabling while hovering UI interface
+     * @param maxNumSegments Max number of segments allowed
      */
-    explicit Controls(Canvas& canvas, OrbitControls& controls);
+    explicit Controls(Canvas& canvas, OrbitControls& controls, int maxNumSegments);
 
     /**
      * Gets number of segments wanted
@@ -41,6 +42,7 @@ public:
 
 private:
     int numSegments_ = 2;
+    int maxNumSegments_;
     Vector3 target_;
     std::shared_ptr<ImguiFunctionalContext> ui_;
 };
