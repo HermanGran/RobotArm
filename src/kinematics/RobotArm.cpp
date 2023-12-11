@@ -1,12 +1,12 @@
 #include "kinematics/RobotArm.hpp"
 
 // Constructor: Initializing the arm
-RobotArm::RobotArm(float size, float len) {
+RobotArm::RobotArm(float size, float length) {
     // Creating geometry for each segment
-    len_ = len;
+    length_ = length;
 
-    segmentGeometry_ = BoxGeometry::create(size, size, len_);
-    segmentGeometry_->translate(0, 0, len_/2);
+    segmentGeometry_ = BoxGeometry::create(size, size, length_);
+    segmentGeometry_->translate(0, 0, length_/2);
 
     // Creating material for each segment
     segmentMaterial_ = MeshLambertMaterial::create();
@@ -16,12 +16,6 @@ RobotArm::RobotArm(float size, float len) {
     jointGeometry_ = SphereGeometry::create(size);
     jointMaterial_ = MeshLambertMaterial::create();
     jointMaterial_->color = Color::red;
-}
-
-// Updates the angles of each segment
-void RobotArm::setAngle(int segment, float angle) {
-    angles_[segment] = angle;
-    segments_[segment]->rotation.z = angles_[segment];
 }
 
 // Updates the number of segments
@@ -44,7 +38,6 @@ void RobotArm::updateNumSegments(int numSegments) {
 
         segments_.push_back(newSegment);
         joints_.push_back(newJoint);
-        angles_.push_back(0);
 
         add(newJoint);
         add(newSegment);
@@ -58,9 +51,17 @@ void RobotArm::updateNumSegments(int numSegments) {
 
         segments_.pop_back();
         joints_.pop_back();
-        angles_.pop_back();
     }
 
+}
+
+// Updates the positions for each segment when CCD iterates over
+void RobotArm::updateSegmentPositions(int segment) {
+    for (int i = segment + 1; i < segments_.size(); ++i) {
+        segments_[i]->position = calculateEndPoint(i - 1);
+    }
+    // Updates joint positions
+    joints_[segment]->position = segments_[segment]->position;
 }
 
 const std::vector<std::shared_ptr<Mesh>> &RobotArm::getSegments() {
@@ -68,17 +69,7 @@ const std::vector<std::shared_ptr<Mesh>> &RobotArm::getSegments() {
 }
 
 // Calculates the endpoint for the segment given the current position and returns the position
-Vector3 RobotArm::calculateEndPoint2D(int segment) {
-
-    Vector3 endPoint = {
-            segments_[segment]->position.x + cos(angles_[segment]) * len_,
-            segments_[segment]->position.y + sin(angles_[segment]) * len_,
-            segments_[segment]->position.z
-    };
-    return endPoint;
-}
-
-Vector3 RobotArm::calculateEndPoint3D(int segment) {
+Vector3 RobotArm::calculateEndPoint(int segment) {
 
     // The direction forward: Z coordinates
     Vector3 forward(0, 0, 1);
@@ -91,58 +82,16 @@ Vector3 RobotArm::calculateEndPoint3D(int segment) {
     // Applies the orientation of the segment to the forward vector
     forward.applyQuaternion(world);
 
-    endPos = (forward * len_) + segments_[segment]->position;
+    endPos = (forward * length_) + segments_[segment]->position;
     return endPos;
 }
 
-// Updates the positions for each segment when CCD iterates over
-void RobotArm::updateSegmentPositions2D(int segment) {
-    for (int i = segment + 1; i < segments_.size(); ++i) {
-        segments_[i]->position = calculateEndPoint2D(segment - 1);
-    }
+Vector3 RobotArm::getEndEffector() {
+    return calculateEndPoint(segments_.size() - 1);
 }
 
-void RobotArm::updateSegmentPositions3D(int segment) {
-    for (int i = segment + 1; i < segments_.size(); ++i) {
-        segments_[i]->position = calculateEndPoint3D(i - 1);
-    }
-    // Updates joint positions
-    joints_[segment]->position = segments_[segment]->position;
-}
 
 // Cyclic Coordinates Descent for calculating desired angle to target position and iterates over each segment to update
-void RobotArm::CCDSolver2D(const Vector3 &target) {
-    const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
-    const float dampeningFactor = 0.12f;
-
-    // CCD Algorithm: with max iterations
-    for (int iter = 0; iter < 10; ++iter) {
-        for (int i = segments_.size() - 1; i >= 0; --i) {
-            // Calculate the current direction vector from the segment to the end effector
-            Vector3 endEffector = calculateEndPoint2D(segments_.size() - 1);
-            Vector3 currentPosition = segments_[i]->position;
-
-            // Calculate vectors from current segment to end effector and target
-            Vector3 toEndEffector = endEffector - currentPosition;
-            Vector3 toTarget = target - currentPosition;
-
-            float desiredAngleDiff = atan2(toTarget.y, toTarget.x) - atan2(toEndEffector.y, toEndEffector.x);
-
-            // Dampening effect for moving smooth created with help from chatGPT
-            float angleChange = std::clamp(desiredAngleDiff, -maxAngleChange, maxAngleChange) * dampeningFactor;
-            angles_[i] += angleChange;
-
-            setAngle(i, angles_[i]);
-            updateSegmentPositions2D(i);
-        }
-
-        // Checks to see if endEffector is close enough to the target
-        if ((calculateEndPoint2D(segments_.size() - 1) - target).length() < 0.1f) {
-            break;
-        }
-    }
-}
-
 // CCD Solver using cross product for finding the axis of rotation in 3D space.
 // And dot product for finding the angle of rotation
 // Applying rotation using quaternions
@@ -152,14 +101,14 @@ void RobotArm::CCDSolver2D(const Vector3 &target) {
 // Quaternions: https://www.youtube.com/watch?v=3BR8tK-LuB0
 //              https://www.youtube.com/watch?v=-m3tRNy1dzI&t=975s
 // Not optimal algorithm, will update
-void RobotArm::CCDSolver3D(const Vector3 &target) {
+void RobotArm::CCDSolver(const Vector3 &target) {
     const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
     const float dampeningFactor = 0.12f; // Reduce the impact of each rotation
 
     for (int iter = 0; iter < 10; ++iter) {
         for (int i = segments_.size() - 1; i >= 0; --i) {
             // Calculate the current direction vector from the segment to the end effector
-            Vector3 endEffector = calculateEndPoint3D(segments_.size() - 1);
+            Vector3 endEffector = getEndEffector();
             Vector3 currentPosition = segments_[i]->position;
 
             // Calculate vectors from current segment to end effector and target
@@ -182,11 +131,11 @@ void RobotArm::CCDSolver3D(const Vector3 &target) {
             segments_[i]->quaternion.normalize();
 
             // Update positions
-            updateSegmentPositions3D(i);
+            updateSegmentPositions(i);
         }
 
         // Check if end effector is close enough to the target
-        if ((calculateEndPoint3D(segments_.size() - 1) - target).length() < 0.1f) {
+        if ((getEndEffector() - target).length() < 0.1f) {
             break;
         }
     }

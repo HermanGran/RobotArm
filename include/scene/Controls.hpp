@@ -4,7 +4,6 @@
 
 #include "threepp/threepp.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
-#include "kinematics/RobotArm.hpp"
 
 using namespace threepp;
 
@@ -29,9 +28,9 @@ private:
     Vector3 target_;
     std::shared_ptr<ImguiFunctionalContext> ui_;
 
+    std::shared_ptr<Mesh> targetPoint_;
     std::shared_ptr<SphereGeometry> targetGeometry_;
     std::shared_ptr<MeshLambertMaterial> targetMaterial_;
-    std::shared_ptr<Mesh> targetPoint_;
 };
 
 #endif //ROBOTARM_CONTROLS_HPP

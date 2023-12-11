@@ -1,4 +1,4 @@
-#include "boids/Boids.hpp"
+#include "Boids.hpp"
 
 // Will focus on test cases before continuing with boids
 Boids::Boids(int numBoids)

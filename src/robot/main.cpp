@@ -1,5 +1,6 @@
 #include "scene/RobotScene.hpp"
 #include "scene/Controls.hpp"
+#include "kinematics/RobotArm.hpp"
 #include <iostream>
 
 using namespace threepp;
@@ -13,7 +14,7 @@ int main () {
     renderer.shadowMap().enabled = true;
 
     // Creating scene
-    auto scene = std::make_shared<RobotScene>(40);
+    auto scene = std::make_shared<RobotScene>(20);
     auto robotArm = std::make_shared<RobotArm>(0.7, 3);
     scene->add(robotArm);
 
@@ -31,7 +32,7 @@ int main () {
     // Adding everything to canvas
     canvas.animate([&] {
         robotArm->updateNumSegments(controls.numSegments());
-        robotArm->CCDSolver3D(controls.target()->position);
+        robotArm->CCDSolver(controls.target()->position);
 
         renderer.render(*scene, scene->camera());
         controls.ui()->render();

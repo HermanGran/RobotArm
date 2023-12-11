@@ -1,5 +1,5 @@
 #include <iostream>
-#include "boids/Boids.hpp"
+#include "Boids.hpp"
 
 using namespace threepp;
 
