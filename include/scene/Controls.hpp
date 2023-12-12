@@ -29,6 +29,18 @@ public:
     [[nodiscard]] int numSegments() const;
 
     /**
+ * Gets wanted size value for segment
+ * @return The size (height and width) for the segments
+ */
+    float getSize() const;
+
+    /**
+     * Gets wanted length value for segment
+     * @return The length for segments
+     */
+    float getLength() const;
+
+    /**
      * Gets target point
      * @return Reference for target point in form of Vector3
      */
@@ -40,9 +52,15 @@ public:
      */
     std::shared_ptr<ImguiFunctionalContext> ui();
 
+
+
 private:
     int numSegments_ = 2;
     int maxNumSegments_;
+
+    float size_ = 0.5;
+    float length_ = 2;
+
     Vector3 target_;
     std::shared_ptr<ImguiFunctionalContext> ui_;
 };

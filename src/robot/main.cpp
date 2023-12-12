@@ -16,7 +16,7 @@ int main () {
 
     // Creating scene
     auto scene = std::make_shared<RobotScene>(40);
-    auto robotArm = std::make_shared<RobotArm>(0.5, 4);
+    auto robotArm = std::make_shared<RobotArm>();
 
     canvas.onWindowResize([&](WindowSize size) {
         scene->camera().aspect = size.aspect();
@@ -35,7 +35,10 @@ int main () {
     // Adding everything to canvas
     canvas.animate([&] {
         targetPoint.move(controls.getTarget());
-        robotArm->updateNumSegments(controls.numSegments(), 0.5, 4);
+
+        robotArm->updateNumSegments(controls.numSegments());
+        robotArm->updateSize(controls.getSize(), controls.getLength());
+
         ccdSolver.solve(controls.getTarget());
 
         renderer.render(*scene, scene->camera());

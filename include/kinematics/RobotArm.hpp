@@ -20,13 +20,37 @@ public:
      * @param size Initial size of segment
      * @param length Initial length of segment
      */
-    explicit RobotArm(float size, float length);
+    explicit RobotArm();
 
     /**
-     * Updates number of segments in RobotArm
+     * Updates number and of segments and size of each segment in RobotArm
      * @param numSegments Number of segments for the arm
      */
-    void updateNumSegments(int numSegments, float size, float length );
+    void updateNumSegments(int numSegments);
+
+    /**
+     * Updates size list with current size (width and height) of each segment
+     * Typically used in loops
+     * @param segment Index for segment list
+     * @param size Current size of segment
+     */
+
+    void setSize(int segment, float size);
+    /**
+     * Updates length list with current size of segments
+     * Future plans involve implementing individual size adjustments, therefore using vectors
+     * Typically used in loops
+     * @param segment Index for segment list
+     * @param length Current length of segment
+     */
+    void setLength(int segment, float length);
+
+    /**
+     * Updates size and length of each segment in RobotArm
+     * @param size Wanted size of segment
+     * @param length Wanted length of segment
+     */
+    void updateSize(float size, float length);
 
     // Override methods from IrobotArm
     const std::vector<std::shared_ptr<Mesh>>& getSegments() override;
