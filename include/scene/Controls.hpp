@@ -55,11 +55,11 @@ public:
 
 
 private:
-    int numSegments_ = 2;
+    int numSegments_ = 4;
     int maxNumSegments_;
 
-    float size_ = 0.5;
-    float length_ = 2;
+    float size_ = 1;
+    float length_ = 5;
 
     Vector3 target_;
     std::shared_ptr<ImguiFunctionalContext> ui_;

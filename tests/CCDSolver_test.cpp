@@ -8,7 +8,7 @@
  * with this one test it runs through all functions in CCD
  */
 TEST_CASE("Check if CCDSolver finds target point") {
-    RobotArm robotArm(1, 3);
+    RobotArm robotArm;
     robotArm.updateNumSegments(4);
     CCDSolver ccdSolver(robotArm);
 

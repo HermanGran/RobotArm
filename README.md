@@ -29,6 +29,7 @@ principles, allowing the arm to reach a specified target represented as a green 
 * **Inverse Kinematics Solver:** Implements an IK solver to move the arm 
 towards target point using the [Cyclic Coordinates Descent](http://rodolphe-vaillant.fr/entry/114/cyclic-coordonate-descent-inverse-kynematic-ccd-ik)
 approach (CCD IK)
+* **Interaction:** Adjustable size and length for segments, and movable target point
 * **Example:** Also includes an example of two boxes rotating. Found under examples/example/Example.cpp
 
 ## Installation and Setup
@@ -62,17 +63,13 @@ from the [custom vcpkg registry](https://github.com/Ecos-platform/vcpkg-registry
 ## Usage
 * **Launching the Robot Arm:** Run the Robot executable
 * **Controlling the Arm:** Top left corner has the control for the target point and number of segments in the arm
-* **Changing size:** You can change the size and length of each segment adjusting these values as shown under, and max number of segments found in src/robot/main.cpp
-``` 
-auto robotArm = std::make_shared<RobotArm>(size, length); 
-Controls controls(canvas, orbitControls, maxNumSegments);
-```
+* **Changing size:** With the sliders included in the user interface you can change size and length
 
 <p align="center">
-  <img src="data/RobotArmControlsNew.gif" />
+  <img src="data/RobotArmControlsUpdate.gif" />
 </p>
 
 ## Further improvement
 * Implement a draggable object as the target point
-* Adjustable sizes and lengths of segments 
 * Adjustable color for segments
+* Prevent clipping between 3D objects

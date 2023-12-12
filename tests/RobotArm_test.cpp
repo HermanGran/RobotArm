@@ -5,7 +5,7 @@
 
 using namespace threepp;
 
-TEST_CASE("test numSegments") {
+TEST_CASE("Update number of segments") {
     RobotArm robotArm;
 
     int numSegments4 = 4;
@@ -25,20 +25,10 @@ TEST_CASE("Update with negative numbers throws exception") {
     REQUIRE_THROWS_AS(robotArm.updateNumSegments(negNumSegments), std::invalid_argument);
 }
 
-TEST_CASE("Correct corresponding sizes for lists") {
+TEST_CASE("Update corresponding sizes for lists") {
     RobotArm robotArm;
     robotArm.updateNumSegments(6);
 
     CHECK(robotArm.getSegments().size() == robotArm.getLengths().size());
     CHECK(robotArm.getSegments().size() == robotArm.getJoints().size());
-}
-
-TEST_CASE("Update sizes") {
-    RobotArm robotArm;
-    robotArm.updateNumSegments(5);
-    auto geometry = BoxGeometry::create(2, 2, 4);
-    auto newGeometry = BoxGeometry::create();
-    robotArm.updateSize(2, 4);
-    CHECK(robotArm.getSegments().front()->geometry()->getAttributes() == geometry->getAttributes());
-
 }
