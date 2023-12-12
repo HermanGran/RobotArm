@@ -12,7 +12,7 @@ int main () {
     Canvas canvas("Kinematics", {{"aa", 4}, {"vsync", true}});
     canvas.setSize({1000, 1000});
     GLRenderer renderer(canvas.size());
-    //renderer.shadowMap().enabled = true; // Does not render properly on built in screen on mac. Comment out if problems arise
+    renderer.shadowMap().enabled = true; // Does not render properly on built in screen on mac. Comment out if problems arise
 
     // Creating scene
     auto scene = std::make_shared<RobotScene>(40);
