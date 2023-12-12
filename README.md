@@ -27,6 +27,7 @@ principles, allowing the arm to reach a specified target represented as a green 
 * **Inverse Kinematics Solver:** Implements an IK solver to move the arm 
 towards target point using the [Cyclic Coordinates Descent](http://rodolphe-vaillant.fr/entry/114/cyclic-coordonate-descent-inverse-kynematic-ccd-ik)
 approach (CCD IK)
+* **Example:** Also includes an example of two boxes rotating. Found under examples/example/Example.cpp
 
 ## Installation and Setup
 ### 1. **Clone the repository:**
