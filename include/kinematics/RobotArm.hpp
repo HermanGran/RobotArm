@@ -26,7 +26,7 @@ public:
      * Updates number of segments in RobotArm
      * @param numSegments Number of segments for the arm
      */
-    void updateNumSegments(int numSegments);
+    void updateNumSegments(int numSegments, float size, float length );
 
     // Override methods from IrobotArm
     const std::vector<std::shared_ptr<Mesh>>& getSegments() override;

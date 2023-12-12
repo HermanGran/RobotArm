@@ -7,3 +7,5 @@ function(add_test_executable name)
 endfunction()
 
 add_test_executable(RobotArm_test)
+add_test_executable(CCDSolver_test)
+add_test_executable(TargetPoint_test)

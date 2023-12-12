@@ -8,7 +8,7 @@ void CCDSolver::solve(Vector3 &target) {
     const float maxAngleChange = 0.05f; // Control the rotation amount per iteration
     const float dampeningFactor = 0.12f; // Reduce the impact of each rotation
 
-    for (int iter = 0; iter < 10; ++iter) {
+    for (int iter = 0; iter < 50; ++iter) {
         for (int i = robotArm.getSegments().size() - 1; i >= 0; --i) {
             // Calculate the current direction vector from the segment to the end effector
             Vector3 endEffector = getEndEffector();

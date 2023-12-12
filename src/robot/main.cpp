@@ -35,7 +35,7 @@ int main () {
     // Adding everything to canvas
     canvas.animate([&] {
         targetPoint.move(controls.getTarget());
-        robotArm->updateNumSegments(controls.numSegments());
+        robotArm->updateNumSegments(controls.numSegments(), 0.5, 4);
         ccdSolver.solve(controls.getTarget());
 
         renderer.render(*scene, scene->camera());

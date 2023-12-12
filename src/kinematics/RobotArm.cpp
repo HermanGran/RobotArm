@@ -3,26 +3,22 @@
 // Constructor: Initializing the arm
 RobotArm::RobotArm(float size, float length) {
 
-    // Init lists for size and length of segments
-    sizes_.push_back(size);
-    lengths_.push_back(length);
-
     // Creating geometry for each segment
-    segmentGeometry_ = BoxGeometry::create(sizes_.front(), sizes_.front(), lengths_.front());
-    segmentGeometry_->translate(0, 0, lengths_.front()/2);
+    segmentGeometry_ = BoxGeometry::create(size, size, length);
+    segmentGeometry_->translate(0, 0, length/2);
 
     // Creating material for each segment
     segmentMaterial_ = MeshLambertMaterial::create();
     segmentMaterial_->color = Color::red;
 
     // Creating spheres for joints
-    jointGeometry_ = SphereGeometry::create(sizes_.front());
+    jointGeometry_ = SphereGeometry::create(size);
     jointMaterial_ = MeshLambertMaterial::create();
     jointMaterial_->color = Color::red;
 }
 
 // Updates the number of segments
-void RobotArm::updateNumSegments(int numSegments) {
+void RobotArm::updateNumSegments(int numSegments, float size, float length) {
 
     if (numSegments < 0 ){
         throw std::invalid_argument("Number of segments cannot be negative.");
@@ -40,8 +36,8 @@ void RobotArm::updateNumSegments(int numSegments) {
         segments_.push_back(newSegment);
         joints_.push_back(newJoint);
         // temp solution
-        lengths_.push_back(lengths_.front());
-        sizes_.push_back(sizes_.front());
+        lengths_.push_back(length);
+        sizes_.push_back(size);
 
         add(newJoint);
         add(newSegment);
